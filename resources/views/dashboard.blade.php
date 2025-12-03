@@ -27,6 +27,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     
+                    <!-- Botão 1: Mentoras -->
                     <a href="{{ route('mentoras.index') }}" class="group block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-300 transition duration-200">
                         <div class="flex items-center mb-2">
                             <div class="p-2 bg-purple-100 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition">
@@ -39,6 +40,7 @@
                         <p class="text-gray-500 text-sm">Explore nossa lista de mulheres incríveis prontas para te ajudar.</p>
                     </a>
 
+                    <!-- Botão 2: Perfil -->
                     <a href="{{ route('completar-perfil') }}" class="group block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-300 transition duration-200">
                         <div class="flex items-center mb-2">
                             <div class="p-2 bg-blue-100 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition">
@@ -51,21 +53,25 @@
                         <p class="text-gray-500 text-sm">Mantenha sua bio, LinkedIn e área de atuação sempre atualizados.</p>
                     </a>
 
-                    <div class="p-6 bg-gray-50 border border-gray-200 rounded-xl opacity-75">
+                    <!-- Botão 3: Eventos (AGORA ATIVO 🟢) -->
+                    <a href="{{ route('eventos.index') }}" class="group block p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-green-300 transition duration-200">
                         <div class="flex items-center mb-2">
-                            <div class="p-2 bg-gray-200 rounded-lg text-gray-500">
+                            <div class="p-2 bg-green-100 rounded-lg text-green-600 group-hover:bg-green-600 group-hover:text-white transition">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                             </div>
-                            <h4 class="ml-3 text-lg font-semibold text-gray-500">Eventos (Em breve)</h4>
+                            <h4 class="ml-3 text-lg font-semibold text-gray-800 group-hover:text-green-600">Eventos e Workshops</h4>
                         </div>
-                        <p class="text-gray-400 text-sm">Workshops e encontros estarão disponíveis por aqui.</p>
-                    </div>
+                        <p class="text-gray-500 text-sm">Inscreva-se em encontros exclusivos e aprenda ao vivo.</p>
+                    </a>
 
                 </div>
             </div>
 
-            </div>
+            <!-- Se quiser colocar a lista de eventos direto aqui embaixo, descomente: -->
+            <!-- <livewire:lista-eventos /> -->
+
+        </div>
     </div>
 </x-app-layout>

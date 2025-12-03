@@ -6,6 +6,8 @@ use App\Livewire\GaleriaMentoras;
 use App\Livewire\VerMentora;
 use App\Livewire\MinhasSolicitacoes;
 use App\Livewire\MinhasCandidaturas;
+use App\Livewire\ListaEventos;
+use App\Livewire\CriarEvento;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,5 +42,7 @@ Route::middleware([
     Route::get('/mentoras/{id}', VerMentora::class)->name('mentoras.show');
     Route::get('/minhas-solicitacoes', MinhasSolicitacoes::class)->name('solicitacoes.index');
     Route::get('/meus-pedidos', MinhasCandidaturas::class)->name('candidaturas.index');
+    Route::get('/eventos', ListaEventos::class)->name('eventos.index');
+    Route::get('/eventos/criar', CriarEvento::class)->name('eventos.criar');
 
 });
