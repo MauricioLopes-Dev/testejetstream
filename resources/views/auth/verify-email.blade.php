@@ -1,45 +1,37 @@
 <x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+    <div class="mb-6 text-center">
+        <i class="fas fa-paper-plane text-4xl text-ellas-cyan mb-4 drop-shadow-[0_0_10px_rgba(4,203,239,0.5)]"></i>
+        <h2 class="font-orbitron text-2xl text-white mb-2">Verifique seu E-mail</h2>
+        <p class="font-biorhyme text-gray-400 text-sm leading-relaxed">
+            Antes de começar, poderia verificar seu endereço de e-mail clicando no link que acabamos de enviar? Se não recebeu, podemos enviar outro.
+        </p>
+    </div>
 
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('Before continuing, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+    @if (session('status') == 'verification-link-sent')
+        <div class="mb-6 font-medium text-sm text-green-400 bg-green-400/10 p-4 rounded-xl border border-green-400/20 text-center">
+            {{ __('Um novo link de verificação foi enviado para o endereço fornecido.') }}
         </div>
+    @endif
 
-        @if (session('status') == 'verification-link-sent')
-            <div class="mb-4 font-medium text-sm text-green-600">
-                {{ __('A new verification link has been sent to the email address you provided in your profile settings.') }}
-            </div>
-        @endif
+    <div class="mt-4 flex flex-col gap-4 items-center">
+        <form method="POST" action="{{ route('verification.send') }}" class="w-full">
+            @csrf
+            <button type="submit" class="w-full py-3 bg-ellas-card border border-ellas-cyan text-ellas-cyan hover:bg-ellas-cyan hover:text-ellas-dark rounded-xl font-orbitron font-bold transition-all duration-300">
+                {{ __('Reenviar E-mail de Verificação') }}
+            </button>
+        </form>
 
-        <div class="mt-4 flex items-center justify-between">
-            <form method="POST" action="{{ route('verification.send') }}">
+        <div class="flex justify-between w-full mt-4">
+            <a href="{{ route('profile.show') }}" class="underline text-sm text-gray-400 hover:text-ellas-purple font-orbitron">
+                {{ __('Editar Perfil') }}
+            </a>
+
+            <form method="POST" action="{{ route('logout') }}" class="inline">
                 @csrf
-
-                <div>
-                    <x-button type="submit">
-                        {{ __('Resend Verification Email') }}
-                    </x-button>
-                </div>
+                <button type="submit" class="underline text-sm text-gray-400 hover:text-ellas-pink font-orbitron ml-2">
+                    {{ __('Sair') }}
+                </button>
             </form>
-
-            <div>
-                <a
-                    href="{{ route('profile.show') }}"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    {{ __('Edit Profile') }}</a>
-
-                <form method="POST" action="{{ route('logout') }}" class="inline">
-                    @csrf
-
-                    <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ms-2">
-                        {{ __('Log Out') }}
-                    </button>
-                </form>
-            </div>
         </div>
-    </x-authentication-card>
+    </div>
 </x-guest-layout>

@@ -16,6 +16,30 @@
                 </div>
             </div>
 
+
+            <div class="mb-12 bg-ellas-dark/50 border border-ellas-nav rounded-2xl p-6 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-ellas-cyan to-ellas-purple"></div>
+    
+    <div class="relative w-20 h-20 shrink-0">
+        <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+            <path class="text-ellas-nav" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" />
+            <path class="text-ellas-cyan drop-shadow-[0_0_5px_rgba(4,203,239,0.8)]" stroke-dasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+        </svg>
+        <div class="absolute inset-0 flex items-center justify-center font-orbitron text-sm font-bold text-white">
+            75%
+        </div>
+    </div>
+
+    <div class="flex-1 text-center md:text-left">
+        <h3 class="font-orbitron text-lg text-white mb-1">Seu perfil está quase completo!</h3>
+        <p class="font-biorhyme text-sm text-gray-400">Adicione suas redes sociais e biografia para ganhar mais visibilidade na comunidade Ellas.</p>
+    </div>
+
+    <a href="{{ route('completar-perfil') }}" class="whitespace-nowrap px-5 py-2.5 bg-ellas-card hover:bg-ellas-nav border border-ellas-cyan/30 text-ellas-cyan font-orbitron text-sm rounded-lg transition-all hover:scale-105">
+        Completar Agora
+    </a>
+</div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
                 <a href="{{ route('completar-perfil') }}" class="group block bg-ellas-card p-8 rounded-[20px] border-t-4 border-transparent hover:-translate-y-2 transition-all duration-300 shadow-lg hover:shadow-[0_20px_40px_rgba(165,4,170,0.2)] relative overflow-hidden">

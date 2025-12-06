@@ -1,6 +1,12 @@
 <x-guest-layout>
-    <div class="mb-10">
-        <a href="/" class="hidden lg:block font-orbitron font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple via-ellas-pink to-ellas-cyan mb-2">
+    <a href="/" class="absolute top-6 left-6 text-gray-400 hover:text-ellas-cyan transition-colors flex items-center gap-2 group z-50">
+        <div class="w-8 h-8 rounded-full border border-ellas-nav flex items-center justify-center group-hover:border-ellas-cyan group-hover:bg-ellas-cyan/10 transition-all">
+            <i class="fas fa-arrow-left text-xs group-hover:-translate-x-1 transition-transform"></i>
+        </div>
+        <span class="font-orbitron text-sm hidden sm:inline">Voltar</span>
+    </a>
+
+    <div class="mb-10 mt-8"> <a href="/" class="hidden lg:block font-orbitron font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple via-ellas-pink to-ellas-cyan mb-2">
             Projeto ELLAS
         </a>
         <h2 class="font-orbitron text-2xl text-white">Bem-vinda de volta!</h2>
@@ -42,7 +48,7 @@
                 <x-label for="password" value="{{ __('Senha') }}" />
                 @if (Route::has('password.request'))
                     <a class="text-sm text-ellas-cyan hover:text-ellas-pink font-orbitron transition-colors" href="{{ route('password.request') }}">
-                        {{ __('Esqueceu?') }}
+                        {{ __('Esqueceu a senha?') }}
                     </a>
                 @endif
             </div>

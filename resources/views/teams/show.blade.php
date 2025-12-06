@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Team Settings') }}
+        <h2 class="font-orbitron font-semibold text-xl text-white leading-tight">
+            {{ __('Configurações do Time') }}
         </h2>
     </x-slot>
 
