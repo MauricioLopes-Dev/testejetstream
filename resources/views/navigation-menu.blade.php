@@ -2,12 +2,15 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20">
             <div class="flex">
+                <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="font-orbitron font-bold text-2xl tracking-wider hover:scale-105 transition-transform">
+                    <!-- AQUI ESTÁ A MUDANÇA: Link para url('/') em vez de dashboard -->
+                    <a href="{{ url('/') }}" class="font-orbitron font-bold text-2xl tracking-wider hover:scale-105 transition-transform">
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">Projeto ELLAS</span>
                     </a>
                 </div>
 
+                <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         {{ __('Dashboard') }}
@@ -39,6 +42,7 @@
 
             <div class="hidden sm:flex sm:items-center sm:ml-6 gap-4">
                 
+                <!-- Dark Mode Toggle -->
                 <button 
                     type="button" 
                     x-data="{ 
@@ -65,6 +69,7 @@
                     </svg>
                 </button>
 
+                <!-- Teams Dropdown (Visível apenas se NÃO for Aluna) -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures() && Auth::user()->role != 'aluna')
                     <div class="relative">
                         <x-dropdown align="right" width="60">
@@ -109,6 +114,7 @@
                     </div>
                 @endif
 
+                <!-- User Dropdown -->
                 <div class="relative">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
@@ -137,6 +143,7 @@
                                     {{ __('Perfil') }}
                                 </x-dropdown-link>
                                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
+                                    <!-- Feature API escondida conforme pedido anterior, mas mantida no código caso reative no config -->
                                     <x-dropdown-link href="{{ route('api-tokens.index') }}" class="text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-ellas-nav">
                                         {{ __('API Tokens') }}
                                     </x-dropdown-link>
@@ -154,6 +161,7 @@
                 </div>
             </div>
 
+            <!-- Hamburger (Mobile) -->
             <div class="-mr-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-slate-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-ellas-nav focus:outline-none transition">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -165,6 +173,7 @@
         </div>
     </div>
 
+    <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white dark:bg-ellas-card border-t border-gray-200 dark:border-ellas-nav">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
@@ -172,6 +181,12 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('completar-perfil') }}" :active="request()->routeIs('completar-perfil')" class="text-slate-600 dark:text-white">
                 {{ __('Meu Perfil') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('eventos.index') }}" :active="request()->routeIs('eventos.*')" class="text-slate-600 dark:text-white">
+                {{ __('Eventos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('blog.index') }}" :active="request()->routeIs('blog.*')" class="text-slate-600 dark:text-white">
+                {{ __('Histórias') }}
             </x-responsive-nav-link>
         </div>
 
@@ -193,8 +208,8 @@
                     x-on:click="isDark = !isDark; if (isDark) { document.documentElement.classList.add('dark'); localStorage.theme = 'dark'; } else { document.documentElement.classList.remove('dark'); localStorage.theme = 'light'; }"
                     class="ml-auto p-2 text-slate-500 dark:text-gray-400"
                 >
-                    <svg x-show="!isDark" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m..."></path></svg>
-                    <svg x-show="isDark" style="display: none;" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A..."></path></svg>
+                    <svg x-show="!isDark" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg x-show="isDark" style="display: none;" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 </button>
             </div>
             <div class="mt-3 space-y-1">
