@@ -10,11 +10,15 @@ use App\Livewire\ListaEventos;
 use App\Livewire\CriarEvento;
 use App\Livewire\CriarHistoria;
 use App\Livewire\Blog;
-use App\LiveWire\LerHistoria;
+use App\Livewire\LerHistoria;
+use App\Http\Controllers\AdminController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\AdminLoginController;
+
 
 /*
 |--------------------------------------------------------------------------
-| Rota Pública (A única que não precisa de login)
+| Rota Pública
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
@@ -23,7 +27,23 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Rotas Protegidas (Precisa estar logada para acessar)
+| Rotas de Administração (Apenas Admins)
+|--------------------------------------------------------------------------
+*/
+// Login admin
+Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
+Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+
+// Dashboard admin protegido
+Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        return view('admin.dashboard'); // Blade admin
+    })->name('dashboard');
+});
+/*
+|--------------------------------------------------------------------------
+| Rotas Protegidas (usuário logado e verificado)
 |--------------------------------------------------------------------------
 */
 Route::middleware([
@@ -32,32 +52,24 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-    // Painel Principal
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    // Perfil
     Route::get('/completar-perfil', CompletarPerfil::class)->name('completar-perfil');
-    
-    // Mentoras
+
     Route::get('/mentoras', GaleriaMentoras::class)->name('mentoras.index');
     Route::get('/mentoras/{id}', VerMentora::class)->name('mentoras.show');
-    
-    // Solicitações
+
     Route::get('/minhas-solicitacoes', MinhasSolicitacoes::class)->name('solicitacoes.index');
     Route::get('/meus-pedidos', MinhasCandidaturas::class)->name('candidaturas.index');
 
-    // Eventos
     Route::get('/eventos', ListaEventos::class)->name('eventos.index');
     Route::get('/eventos/criar', CriarEvento::class)->name('eventos.criar');
 
-    // Blog
     Route::get('/blog', Blog::class)->name('blog.index');
     Route::get('/blog/escrever', CriarHistoria::class)->name('blog.criar');
 
-    // Ler História
     Route::get('/blog/{id}', LerHistoria::class)->name('blog.show');
 
-}); 
-// Fim do grupo de proteção
+});
