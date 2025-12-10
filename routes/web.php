@@ -63,16 +63,16 @@ Route::get('/depoimentos', function () {
 |--------------------------------------------------------------------------
 */
 // Login admin
-Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
+Route::get('/portal', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/portal', [AdminLoginController::class, 'login'])->name('admin.login.submit');
 Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
 // Dashboard admin protegido (Middleware customizado)
-Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', function () {
-        return view('admin.dashboard'); 
-    })->name('dashboard');
-});
+//Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
+    //Route::get('/', function () {
+       // return view('admin.dashboard'); 
+    //})->name('dashboard');
+//});
 
 /*
 |--------------------------------------------------------------------------
