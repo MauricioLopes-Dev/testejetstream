@@ -1,7 +1,7 @@
 <footer class="bg-ellas-card border-t border-ellas-nav pt-16 pb-8">
     <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
         <div class="text-center md:text-left">
-            <img src="{{ asset('IMG/2.png') }}" alt="Logo" class="h-16 mx-auto md:mx-0 mb-4">
+            <img src="{{ asset('img/2.png') }}" alt="Logo" class="h-16 mx-auto md:mx-0 mb-4">
             <p class="font-biorhyme text-gray-400 text-sm max-w-xs">Juntas, transformamos o futuro da tecnologia!</p>
         </div>
         

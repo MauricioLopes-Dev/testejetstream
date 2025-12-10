@@ -1,6 +1,6 @@
 <section class="py-20 relative">
     <div class="absolute inset-0 bg-ellas-dark">
-        <img src="{{ asset('IMG/Página principal.jpg') }}" class="w-full h-full object-cover opacity-20" alt="CTA BG">
+        <img src="{{ asset('img/Página principal.jpg') }}" class="w-full h-full object-cover opacity-20" alt="CTA BG">
         <div class="absolute inset-0 bg-gradient-to-t from-ellas-dark via-transparent to-ellas-dark"></div>
     </div>
     
