@@ -46,27 +46,38 @@ Route::get('/debug-email', function () {
         // Mascara a senha para segurança
         $senhaMascarada = substr($config['password'] ?? '', 0, 3) . '...';
 
+        // Prepara valores seguros (se não existir, mostra "NÃO DEFINIDO")
+        $host = $config['host'] ?? '<span style="color:red">NÃO DEFINIDO</span>';
+        $port = $config['port'] ?? '<span style="color:red">NÃO DEFINIDO</span>';
+        $encryption = $config['encryption'] ?? '<span style="color:red">NÃO DEFINIDO</span>';
+        $username = $config['username'] ?? '<span style="color:red">NÃO DEFINIDO</span>';
+        $fromAddress = $from['address'] ?? '<span style="color:red">NÃO DEFINIDO</span>';
+        $fromName = $from['name'] ?? '<span style="color:red">NÃO DEFINIDO</span>';
+
         $info = "
         <h1>Diagnóstico de E-mail</h1>
         <h3>Configuração Carregada pelo Laravel:</h3>
         <ul>
-            <li><strong>Host:</strong> {$config['host']}</li>
-            <li><strong>Porta:</strong> {$config['port']}</li>
-            <li><strong>Criptografia:</strong> {$config['encryption']}</li>
-            <li><strong>Usuário:</strong> {$config['username']}</li>
+            <li><strong>Host:</strong> {$host}</li>
+            <li><strong>Porta:</strong> {$port}</li>
+            <li><strong>Criptografia:</strong> {$encryption}</li>
+            <li><strong>Usuário:</strong> {$username}</li>
             <li><strong>Senha:</strong> {$senhaMascarada}</li>
-            <li><strong>From Address:</strong> {$from['address']}</li>
-            <li><strong>From Name:</strong> {$from['name']}</li>
+            <li><strong>From Address:</strong> {$fromAddress}</li>
+            <li><strong>From Name:</strong> {$fromName}</li>
         </ul>
         <hr>
         <h3>Tentando enviar e-mail de teste...</h3>
         ";
 
         // Tenta enviar
-        Mail::raw('Teste de envio Railway (Diagnóstico) 🚀', function ($msg) use ($from) {
+        Mail::raw('Teste de envio Railway (Diagnóstico) 🚀', function ($msg) use ($fromAddress, $fromName) {
             $msg->to('seu.email.pessoal@gmail.com') // <--- O E-mail vai para aqui
-                ->subject('Teste de Conexão - Projeto Ellas')
-                ->from($from['address'], $from['name']);
+                ->subject('Teste de Conexão - Projeto Ellas');
+            
+            if ($fromAddress && $fromAddress !== '<span style="color:red">NÃO DEFINIDO</span>') {
+                $msg->from($fromAddress, $fromName);
+            }
         });
 
         return $info . "<h2 style='color:green'>SUCESSO! Conexão estabelecida e e-mail enviado.</h2>";
