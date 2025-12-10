@@ -185,5 +185,10 @@ Route::middleware([
     // 3. Área Administrativa (Protegida)
     Route::get('/admin/aprovar-mentoras', AprovarMentoras::class)->name('admin.aprovar');
     Route::get('/admin/depoimentos', GerenciarDepoimentos::class)->name('admin.depoimentos');
+    
+    // Rota de teste simples para corrigir o erro 404
+Route::get('/teste-email', function () {
+    return redirect('/debug-email'); // Redireciona para a nova rota de diagnóstico que criamos
+});
 
 });
