@@ -39,7 +39,7 @@
             </div>
 
             <div class="hidden lg:block lg:w-1/2 relative">
-                <img class="absolute inset-0 h-full w-full object-cover" src="{{ asset('IMG/Página de login.jpg') }}" alt="Background">
+                <img class="absolute inset-0 h-full w-full object-cover" src="{{ asset('img/Página de login.jpg') }}" alt="Background">
                 <div class="absolute inset-0 bg-gradient-to-l from-white/10 via-transparent to-transparent dark:from-ellas-dark/80 dark:via-ellas-purple/20"></div>
                 
                 <div class="absolute bottom-20 left-20 right-20 text-white z-20 drop-shadow-lg">

@@ -4,7 +4,7 @@
         <!-- Logo e Título -->
         <div class="mb-6 text-center">
             <a href="/" class="flex justify-center mb-4">
-                <img src="{{ asset('IMG/2.png') }}" class="h-20 w-auto bg-white rounded-full p-2" />
+                <img src="{{ asset('img/2.png') }}" class="h-20 w-auto bg-white rounded-full p-2" />
             </a>
             <h2 class="text-2xl font-bold text-white font-orbitron tracking-wider">
                 Área Administrativa

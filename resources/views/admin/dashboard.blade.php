@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-ellas-dark bg-[url('/IMG/inicio.jpg')] bg-cover bg-center bg-no-repeat bg-blend-overlay bg-black/80">
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-ellas-dark bg-[url('/img/inicio.jpg')] bg-cover bg-center bg-no-repeat bg-blend-overlay bg-black/80">
         
         <!-- Logo e Título -->
         <div class="mb-8 text-center animate__animated animate__fadeInDown">
