@@ -11,28 +11,30 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Cria o Usuário Admin
-        $user = User::create([
-            'name' => 'Super Admin',
-            'email' => 'admin@projeto.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'bio' => 'Administradora Geral',
-            'area_atuacao' => 'Gestão',
-            'email_verified_at' => now(), // Importante para não pedir verificação
-        ]);
+        // 1. Tenta encontrar pelo email. Se não achar, CRIA.
+        $user = User::firstOrCreate(
+            ['email' => 'admin@projeto.com'], // Busca por este campo
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'bio' => 'Administradora Geral',
+                'area_atuacao' => 'Gestão',
+                'email_verified_at' => now(),
+            ]
+        );
 
-        // 2. Cria o Time Pessoal (Obrigatório)
-        $team = Team::forceCreate([
-            'user_id' => $user->id,
-            'name' => 'Time Administrativo',
-            'personal_team' => true,
-        ]);
+        // 2. Garante o Time (Só cria se não tiver)
+        if (!$user->personalTeam()) {
+            $team = Team::forceCreate([
+                'user_id' => $user->id,
+                'name' => 'Time Administrativo',
+                'personal_team' => true,
+            ]);
 
-        // 3. VINCULA O TIME AO USUÁRIO (A parte que estava falhando)
-        $user->current_team_id = $team->id;
-        $user->save();
+            $user->forceFill(['current_team_id' => $team->id])->save();
+        }
         
-        $this->command->info('Admin criado e vinculado ao Time ID: ' . $team->id);
+        $this->command->info('Admin verificado/criado com sucesso.');
     }
 }
