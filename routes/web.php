@@ -18,6 +18,7 @@ use App\Livewire\GerenciarAulas; // <--- Importação Nova
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AdminLoginController;
+use Illuminate\Support\Facades\Mail;
 // Models para a Home Page
 use App\Models\User;
 use App\Models\Event;
@@ -115,5 +116,17 @@ Route::middleware([
     // 3. Área Administrativa (Protegida)
     Route::get('/admin/aprovar-mentoras', AprovarMentoras::class)->name('admin.aprovar');
     Route::get('/admin/depoimentos', GerenciarDepoimentos::class)->name('admin.depoimentos');
+
+    Route::get('/teste-email', function () {
+    try {
+        Mail::raw('Teste de envio pelo Railway!', function ($msg) {
+            $msg->to('seu.email.pessoal@gmail.com') // Coloque seu email real aqui para receber
+                ->subject('Teste Resend Railway');
+        });
+        return 'E-mail enviado com sucesso!';
+    } catch (\Exception $e) {
+        return 'Erro: ' . $e->getMessage();
+    }
+});
 
 });
