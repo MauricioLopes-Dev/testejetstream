@@ -36,7 +36,7 @@ Route::get('/debug-email', function () {
     // 1. Aumenta o tempo limite para 120 segundos para evitar o erro de "30 seconds exceeded"
     set_time_limit(120);
 
-    // Inicializa variável de log para não dar erro de undefined
+    // Inicializa variável de log para não dar erro de undefined se falhar no início
     $info = "<h1>Diagnóstico de E-mail (Resend/SMTP)</h1>";
 
     try {
@@ -52,6 +52,7 @@ Route::get('/debug-email', function () {
         $port = $config['port'] ?? '<span style="color:red">NÃO DEFINIDO</span>';
         $encryption = $config['encryption'] ?? '<span style="color:red">NÃO DEFINIDO</span>';
         $username = $config['username'] ?? '<span style="color:red">NÃO DEFINIDO</span>';
+        
         // Mascara a senha
         $passwordRaw = $config['password'] ?? '';
         $senhaMascarada = substr($passwordRaw, 0, 4) . '...' . substr($passwordRaw, -4);
@@ -75,7 +76,7 @@ Route::get('/debug-email', function () {
 
         // 3. Teste de Envio
         Mail::raw('Teste de envio Railway com Timeout Aumentado 🚀', function ($msg) use ($fromAddress, $fromName) {
-            $msg->to('seu.email.pessoal@gmail.com') // <--- SEU EMAIL AQUI
+            $msg->to('seu.email.pessoal@gmail.com') // <--- COLOQUE SEU EMAIL REAL AQUI
                 ->subject('Teste de Conexão - Projeto Ellas');
             
             // Garante que o remetente está definido para evitar erro de Sender
