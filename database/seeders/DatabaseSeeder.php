@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +11,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->withPersonalTeam()->create();
+        // REMOVIDO: O código que criava o 'test@example.com' foi apagado para não dar erro de duplicidade.
 
-        User::factory()->withPersonalTeam()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // ADICIONADO: Chamamos os nossos seeders personalizados
+        // Eles são inteligentes e só criam se não existir (graças ao firstOrCreate que usamos neles)
+        $this->call([
+            AdminSeeder::class,
+            MentorasSeeder::class,
         ]);
     }
 }
