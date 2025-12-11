@@ -191,4 +191,37 @@ Route::get('/teste-email', function () {
     return redirect('/debug-email'); // Redireciona para a nova rota de diagnóstico que criamos
 });
 
+/*
+|--------------------------------------------------------------------------
+| Rota Temporária para Criar Admin em Produção
+|--------------------------------------------------------------------------
+| USE E DEPOIS APAGUE ESTE BLOCO!
+*/
+Route::get('/tornar-admin/{email}', function ($email) {
+    // 1. Busca o usuário pelo e-mail
+    $user = App\Models\User::where('email', $email)->first();
+
+    if (!$user) {
+        return "Erro: Usuário com o e-mail '{$email}' não encontrado.";
+    }
+
+    // 2. Atualiza para Admin
+    $user->update([
+        'role' => 'admin',
+        'email_verified_at' => now(), // Garante que está verificado
+    ]);
+
+    // 3. Garante que tenha um time (obrigatório do sistema)
+    if (!$user->personalTeam()) {
+        $team = App\Models\Team::forceCreate([
+            'user_id' => $user->id,
+            'name' => explode(' ', $user->name, 2)[0] . "'s Team",
+            'personal_team' => true,
+        ]);
+        $user->forceFill(['current_team_id' => $team->id])->save();
+    }
+
+    return "Sucesso! O usuário '{$user->name}' ({$email}) agora é um ADMIN. Tente acessar o /portal.";
+});
+
 });
