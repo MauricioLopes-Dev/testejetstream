@@ -6,8 +6,9 @@ use Livewire\Component;
 use App\Models\User;
 use App\Models\Solicitacao;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail; // <--- IMPORTANTE
-use App\Mail\NovaSolicitacaoMentoria; // <--- IMPORTANTE
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NovaSolicitacaoMentoria;
+use Illuminate\Support\Facades\Log; // Importante para logar erros
 
 class VerMentora extends Component
 {
@@ -31,6 +32,10 @@ class VerMentora extends Component
 
     public function solicitarMentoria()
     {
+        // Aumenta o tempo limite do script para 120 segundos (2 minutos)
+        // Isso evita o erro "Maximum execution time of 30 seconds exceeded"
+        set_time_limit(120);
+
         if (Auth::id() === $this->mentora->id) {
             return;
         }
@@ -42,12 +47,16 @@ class VerMentora extends Component
             'status' => 'pendente'
         ]);
 
-        // 2. ENVIA O E-MAIL (A MÁGICA ACONTECE AQUI)
+        // 2. Tenta enviar o E-mail
         try {
             Mail::to($this->mentora->email)->send(new NovaSolicitacaoMentoria($solicitacao));
-        } catch (\Exception $e) {
-            // Se der erro no envio, não travamos o site, apenas logamos
-            \Log::error('Erro ao enviar email: ' . $e->getMessage());
+        } catch (\Throwable $e) {
+            // Usamos \Throwable para capturar qualquer erro, inclusive timeouts
+            // O sistema não vai travar na tela da usuária, mas vai salvar o erro no log
+            Log::error('Erro crítico ao enviar email de mentoria: ' . $e->getMessage());
+            
+            // Opcional: Você pode adicionar um aviso visual se quiser, 
+            // mas aqui deixamos prosseguir para não frustrar a usuária já que o pedido foi salvo no banco.
         }
 
         $this->solicitacaoEnviada = true;
