@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail; // <--- Desativado para parar o envio de e-mail
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -74,5 +74,13 @@ class User extends Authenticatable
             'password' => 'hashed',
             'solicitou_mentoria' => 'boolean',
         ];
+    }
+
+    // --- RELACIONAMENTOS ---
+
+    // Recupera os eventos em que a usuária se inscreveu
+    public function eventosParticipando()
+    {
+        return $this->belongsToMany(Event::class, 'event_user')->withTimestamps();
     }
 }
