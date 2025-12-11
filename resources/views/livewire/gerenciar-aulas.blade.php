@@ -31,28 +31,56 @@
 
                     <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
                         
-                        <!-- Coluna 1: Material de Apoio -->
-                        <div>
-                            <h4 class="font-bold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                        <!-- Coluna 1: Material de Apoio (COM UPLOAD) -->
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-gray-800 dark:text-gray-200 flex items-center">
                                 <span class="text-xl mr-2">📚</span> Material da Aula
                             </h4>
-                            <div class="flex gap-2">
+                            
+                            <!-- Opção A: Link Externo -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Link Externo (Drive/Youtube)</label>
                                 <input 
                                     type="text" 
                                     wire:model="materialLinks.{{ $aula->id }}" 
-                                    placeholder="Cole aqui o link (Drive, PDF, Slide)..." 
-                                    class="flex-1 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+                                    placeholder="https://..." 
+                                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-white text-sm focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
                                 >
-                                <button 
-                                    wire:click="salvarMaterial({{ $aula->id }})"
-                                    class="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold transition shadow-md"
-                                >
-                                    Salvar
-                                </button>
                             </div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                Ao salvar, este link ficará disponível para as alunas na agenda delas.
-                            </p>
+
+                            <!-- Opção B: Upload de Arquivo -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">OU Anexar Arquivo (PDF/Slide)</label>
+                                <div class="flex items-center gap-2">
+                                    <input 
+                                        type="file" 
+                                        wire:model="arquivos.{{ $aula->id }}" 
+                                        class="block w-full text-sm text-gray-500 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900 dark:file:text-indigo-300 transition"
+                                    >
+                                    
+                                    <!-- Spinner de Carregamento -->
+                                    <div wire:loading wire:target="arquivos.{{ $aula->id }}">
+                                        <svg class="animate-spin h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    </div>
+                                </div>
+                                @error("arquivos.{$aula->id}") <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
+
+                            <button 
+                                wire:click="salvarMaterial({{ $aula->id }})"
+                                class="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold transition shadow-md mt-2"
+                            >
+                                Salvar Material
+                            </button>
+
+                            @if($aula->material_link)
+                                <div class="mt-2 p-3 bg-gray-50 dark:bg-gray-700 rounded text-sm break-all">
+                                    <span class="font-bold text-gray-600 dark:text-gray-300">Material Atual:</span>
+                                    <a href="{{ $aula->material_link }}" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline block mt-1">
+                                        {{ Str::limit($aula->material_link, 50) }}
+                                    </a>
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Coluna 2: Lista de Presença -->
@@ -66,7 +94,7 @@
                                     <p class="text-gray-500 dark:text-gray-400 text-sm italic">Nenhuma inscrição ainda.</p>
                                 </div>
                             @else
-                                <div class="max-h-40 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
+                                <div class="max-h-60 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
                                     @foreach($aula->participantes as $aluna)
                                         <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-600">
                                             <div class="flex items-center">
