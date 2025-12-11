@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
         // Se estiver em produção (Railway), força tudo para HTTPS
         if($this->app->environment('production')) {
             URL::forceScheme('https');
+            config(['fortify.home' => '/dashboard']);
         }
+        
     }
 }
