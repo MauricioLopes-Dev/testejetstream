@@ -30,16 +30,30 @@
                             <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-1">{{ $aula->titulo }}</h3>
                             <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Local: {{ $aula->local }}</p>
                         </div>
-                        <div class="mt-4 md:mt-0 flex items-center">
+                        
+                        <div class="mt-4 md:mt-0 flex items-center gap-4">
+                            <!-- Contador de Alunas -->
                             <span class="px-3 py-1 rounded-full text-xs font-bold {{ $aula->participantes->count() > 0 ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 'bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-300' }}">
                                 {{ $aula->participantes->count() }} Alunas Inscritas
                             </span>
+
+                            <!-- BOTÃO DE EXCLUIR AULA -->
+                            <button 
+                                wire:click="excluirAula({{ $aula->id }})"
+                                onclick="confirm('Tem certeza que deseja excluir esta aula? A ação não pode ser desfeita.') || event.stopImmediatePropagation()"
+                                class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition"
+                                title="Excluir Aula"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
 
                     <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
                         
-                        <!-- Coluna 1: Material de Apoio (COM UPLOAD) -->
+                        <!-- Coluna 1: Material de Apoio -->
                         <div class="space-y-4">
                             <h4 class="font-bold text-gray-800 dark:text-gray-200 flex items-center">
                                 <span class="text-xl mr-2">📚</span> Material da Aula
@@ -66,7 +80,6 @@
                                         class="block w-full text-sm text-gray-500 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900 dark:file:text-indigo-300 transition"
                                     >
                                     
-                                    <!-- Spinner de Carregamento -->
                                     <div wire:loading wire:target="arquivos.{{ $aula->id }}">
                                         <svg class="animate-spin h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                     </div>
@@ -102,7 +115,7 @@
                                     <p class="text-gray-500 dark:text-gray-400 text-sm italic">Nenhuma inscrição ainda.</p>
                                 </div>
                             @else
-                                <div class="max-h-60 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
+                                <div class="max-h-40 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
                                     @foreach($aula->participantes as $aluna)
                                         <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-600">
                                             <div class="flex items-center">

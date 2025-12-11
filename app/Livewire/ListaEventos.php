@@ -25,15 +25,18 @@ class ListaEventos extends Component
     {
         $evento = Event::find($eventId);
         if ($evento) {
+            // detach = Remove da tabela pivô (Desinscreve)
             $evento->participantes()->detach(Auth::id());
         }
     }
 
     public function render()
     {
-        // ATENÇÃO: Removi o filtro "where data_hora >= now()" para você ver tudo
+        // FILTRO ATIVADO: Mostrar apenas eventos futuros (data_hora >= agora)
+        // Alterei também para 'asc' para mostrar os eventos mais próximos primeiro (amanhã, depois de amanhã...)
         $eventos = Event::with('participantes')
-            ->orderBy('data_hora', 'desc') // Mostra os eventos mais novos primeiro
+            ->where('data_hora', '>=', now()) 
+            ->orderBy('data_hora', 'asc') 
             ->get();
 
         return view('livewire.lista-eventos', ['eventos' => $eventos])

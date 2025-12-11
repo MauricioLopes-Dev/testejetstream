@@ -55,6 +55,18 @@ class GerenciarAulas extends Component
         }
     }
 
+    // NOVA FUNÇÃO: Deletar Aula
+    public function excluirAula($eventoId)
+    {
+        $evento = Event::find($eventoId);
+
+        // Só permite excluir se for dono do evento
+        if ($evento && $evento->user_id == Auth::id()) {
+            $evento->delete();
+            session()->flash('message', 'Aula excluída com sucesso.');
+        }
+    }
+
     public function render()
     {
         $aulas = Event::with('participantes')
