@@ -3,12 +3,12 @@
         <div class="flex justify-between h-20">
             <div class="flex">
                 <!-- Logo -->
-            <div class="shrink-0 flex items-center">
-                <a href="{{ url('/') }}" class="flex items-center gap-3 font-orbitron font-bold text-2xl tracking-wider hover:scale-105 transition-transform">
-                <img src="{{ asset('img/3.png') }}" alt="Logo Projeto ELLAS" class="h-12 w-auto" />
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">Projeto ELLAS</span>
-                </a>
-            </div>
+                <div class="shrink-0 flex items-center">
+                    <a href="{{ url('/') }}" class="flex items-center gap-3 font-orbitron font-bold text-2xl tracking-wider hover:scale-105 transition-transform">
+                        <img src="{{ asset('img/3.png') }}" alt="Logo Projeto ELLAS" class="h-12 w-auto" />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">Projeto ELLAS</span>
+                    </a>
+                </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -28,6 +28,16 @@
                         {{ __('Eventos') }}
                     </x-nav-link>
 
+                    <!-- NOVOS LINKS DA AGENDA -->
+                    <x-nav-link href="{{ route('agenda.index') }}" :active="request()->routeIs('agenda.index')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                        {{ __('Agenda') }}
+                    </x-nav-link>
+
+                    <x-nav-link href="{{ route('meus.cursos') }}" :active="request()->routeIs('meus.cursos')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                        {{ __('Meus Cursos') }}
+                    </x-nav-link>
+                    <!-- FIM NOVOS LINKS -->
+
                     <x-nav-link href="{{ route('candidaturas.index') }}" :active="request()->routeIs('candidaturas.index')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         {{ __('Inscrições') }}
                     </x-nav-link>
@@ -40,9 +50,9 @@
                 </div>
             </div>
 
-            <div class="hidden sm:flex sm:items-center sm:ml-6 gap-3"> <!-- Reduzi o gap para ficar mais compacto -->
+            <div class="hidden sm:flex sm:items-center sm:ml-6 gap-3">
                 
-                <!-- 1. Teams Dropdown (AGORA SÓ APARECE PARA ADMIN) -->
+                <!-- 1. Teams Dropdown (SÓ APARECE PARA ADMIN) -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures() && Auth::user()->role === 'admin')
                     <div class="relative mr-2">
                         <x-dropdown align="right" width="60">
@@ -87,7 +97,7 @@
                     </div>
                 @endif
 
-                <!-- 2. Dark Mode Toggle (Agora bem ao lado do perfil) -->
+                <!-- 2. Dark Mode Toggle -->
                 <button 
                     type="button" 
                     x-data="{ 
@@ -174,7 +184,6 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white dark:bg-ellas-card border-t border-gray-200 dark:border-ellas-nav">
-        <!-- ... (mantive o menu mobile igual) ... -->
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                 {{ __('Dashboard') }}
@@ -182,11 +191,24 @@
             <x-responsive-nav-link href="{{ route('completar-perfil') }}" :active="request()->routeIs('completar-perfil')" class="text-slate-600 dark:text-white">
                 {{ __('Meu Perfil') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('blog.index') }}" :active="request()->routeIs('blog.*')" class="text-slate-600 dark:text-white">
+                {{ __('Histórias') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('eventos.index') }}" :active="request()->routeIs('eventos.*')" class="text-slate-600 dark:text-white">
                 {{ __('Eventos') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('blog.index') }}" :active="request()->routeIs('blog.*')" class="text-slate-600 dark:text-white">
-                {{ __('Histórias') }}
+            
+            <!-- Novos Links Mobile -->
+            <x-responsive-nav-link href="{{ route('agenda.index') }}" :active="request()->routeIs('agenda.index')" class="text-slate-600 dark:text-white">
+                {{ __('Agenda') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('meus.cursos') }}" :active="request()->routeIs('meus.cursos')" class="text-slate-600 dark:text-white">
+                {{ __('Meus Cursos') }}
+            </x-responsive-nav-link>
+            <!-- Fim Novos Links Mobile -->
+
+            <x-responsive-nav-link href="{{ route('candidaturas.index') }}" :active="request()->routeIs('candidaturas.index')" class="text-slate-600 dark:text-white">
+                {{ __('Inscrições') }}
             </x-responsive-nav-link>
         </div>
 
