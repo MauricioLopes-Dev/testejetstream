@@ -7,7 +7,7 @@
     </a>
 
     <div class="mb-10 mt-8"> <a href="/" class="hidden lg:block font-orbitron font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple via-ellas-pink to-ellas-cyan mb-2">
-            Projeto ELLAS
+            Conectadas com ELLAS
         </a>
         <h2 class="font-orbitron text-2xl text-white">Bem-vinda de volta!</h2>
         <p class="font-biorhyme text-gray-400 text-sm mt-2">Insira seus dados para acessar sua conta.</p>
