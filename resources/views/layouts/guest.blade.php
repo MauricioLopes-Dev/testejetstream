@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Conectada com ELLAS') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -26,7 +26,7 @@
                 
                 <div class="lg:hidden mb-8 text-center">
                     <a href="/" class="font-orbitron font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">
-                       Projeto ELLAS
+                       Conectada com ELLAS
                     </a>
                 </div>
 

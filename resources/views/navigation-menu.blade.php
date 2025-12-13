@@ -6,7 +6,7 @@
                 <div class="shrink-0 flex items-center">
                     <a href="{{ url('/') }}" class="flex items-center gap-3 font-orbitron font-bold text-2xl tracking-wider hover:scale-105 transition-transform">
                         <img src="{{ asset('img/3.png') }}" alt="Logo Projeto ELLAS" class="h-12 w-auto" />
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">Projeto ELLAS</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">Conectada com ELLAS</span>
                     </a>
                 </div>
 

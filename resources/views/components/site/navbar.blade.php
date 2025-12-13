@@ -3,7 +3,7 @@
         <div class="flex justify-between h-20 items-center">
             <div class="shrink-0 flex items-center">
                 <a href="{{ route('home') }}" class="font-orbitron font-bold text-3xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple via-ellas-pink to-ellas-cyan hover:scale-105 transition-transform">
-                   Projeto ELLAS
+                   Conectadas com ELLAS
                 </a>
             </div>
 
