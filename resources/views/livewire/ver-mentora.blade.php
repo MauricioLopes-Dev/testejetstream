@@ -37,10 +37,10 @@
 
                     <!-- SEÇÃO NOVA: Aulas da Mentora -->
                     @php
-                        // Busca eventos criados por esta mentora
-                        // Removi o filtro de data para garantir que apareça nos testes
+                        // Busca eventos futuros desta mentora
                         $aulasMentora = \App\Models\Event::where('user_id', $this->mentora->id)
-                            ->orderBy('data_hora', 'desc')
+                            ->where('data_hora', '>=', now()) // Apenas futuras
+                            ->orderBy('data_hora', 'asc')
                             ->take(5)
                             ->get();
                     @endphp
@@ -48,7 +48,7 @@
                     @if($aulasMentora->isNotEmpty())
                         <div class="pt-2">
                             <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b dark:border-gray-700 pb-2 flex items-center">
-                                <span class="mr-2">📚</span> Aulas e Workshops
+                                <span class="mr-2">📚</span> Aulas e Workshops Disponíveis
                             </h3>
                             <div class="space-y-4">
                                 @foreach($aulasMentora as $aula)
@@ -61,19 +61,25 @@
                                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Local: {{ $aula->local ?? 'Online' }}</p>
                                         </div>
                                         
-                                        <!-- Botão de Ação -->
+                                        <!-- Botão de Inscrição Direta -->
                                         @php
-                                            $inscrita = $aula->participantes->contains(Auth::id());
+                                            $inscrita = $aula->participantes()->where('user_id', Auth::id())->exists();
                                         @endphp
 
                                         @if($inscrita)
-                                            <span class="text-sm bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded-lg font-bold text-center border border-green-200 dark:border-green-800">
-                                                Inscrita ✓
+                                            <span class="text-sm bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded-lg font-bold text-center border border-green-200 dark:border-green-800 flex items-center justify-center min-w-[100px]">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Inscrita
                                             </span>
                                         @else
-                                            <a href="{{ route('eventos.index') }}" class="text-sm bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold transition shadow-sm text-center">
-                                                Ver e Inscrever
-                                            </a>
+                                            <button 
+                                                wire:click="inscreverAula({{ $aula->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="text-sm bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold transition shadow-sm text-center flex items-center justify-center min-w-[100px]"
+                                            >
+                                                <span wire:loading.remove wire:target="inscreverAula({{ $aula->id }})">Inscrever-se</span>
+                                                <span wire:loading wire:target="inscreverAula({{ $aula->id }})">...</span>
+                                            </button>
                                         @endif
                                     </div>
                                 @endforeach
@@ -81,10 +87,10 @@
                         </div>
                     @else
                         <div class="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 text-center">
-                            <p class="text-sm text-gray-500 dark:text-gray-400 italic">Esta mentora ainda não tem aulas cadastradas.</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 italic">Esta mentora não tem aulas agendadas no momento.</p>
                         </div>
                     @endif
-                    <!-- FIM DA SEÇÃO NOVA -->
+                    <!-- FIM DA SEÇÃO DE AULAS -->
 
                     @if($this->mentora->linkedin_url || $this->mentora->github_url)
                     <div>
@@ -108,7 +114,7 @@
                     @endif
                 </div>
 
-                <!-- Coluna Direita (Ação) -->
+                <!-- Coluna Direita (Ação de Mentoria) -->
                 <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg h-fit border border-gray-100 dark:border-gray-600 transition duration-300">
                     <h3 class="font-bold text-gray-800 dark:text-white mb-4">Interessada na mentoria?</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-300 mb-6">
@@ -117,7 +123,6 @@
                     
                     <div class="mt-2">
                         @if($statusSolicitacao === 'aceito')
-                            <!-- ESTADO ACEITO -->
                             <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-300 px-4 py-3 rounded relative mb-4">
                                 <strong class="font-bold">Mentoria Aceita! 🎉</strong>
                                 <span class="block sm:inline text-sm">Você já pode entrar em contato.</span>
@@ -128,7 +133,6 @@
                             </a>
 
                         @elseif($statusSolicitacao === 'pendente')
-                            <!-- ESTADO PENDENTE -->
                             <div class="bg-yellow-100 dark:bg-yellow-900/50 border border-yellow-400 dark:border-yellow-600 text-yellow-800 dark:text-yellow-200 px-4 py-3 rounded relative mb-4">
                                 <strong class="font-bold">Solicitação Enviada!</strong>
                                 <span class="block sm:inline text-sm">Aguarde a resposta da mentora.</span>
@@ -139,7 +143,6 @@
                             </button>
 
                         @else
-                            <!-- ESTADO INICIAL (Nunca pediu ou Recusado) -->
                             <button 
                                 wire:click="solicitarMentoria" 
                                 wire:loading.attr="disabled"

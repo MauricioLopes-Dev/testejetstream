@@ -5,16 +5,17 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Solicitacao;
-use App\Models\Event; // <--- Importação necessária para manipular eventos
+use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NovaSolicitacaoMentoria;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage; // <--- Importante para o download
 
 class VerMentora extends Component
 {
     public User $mentora;
-    public $statusSolicitacao = null; // null, 'pendente', 'aceito', 'recusado'
+    public $statusSolicitacao = null;
 
     public function mount($id)
     {
@@ -22,7 +23,6 @@ class VerMentora extends Component
         
         if ($this->mentora->role !== 'mentora') { abort(404); }
 
-        // Busca a solicitação MAIS RECENTE
         $solicitacao = Solicitacao::where('mentora_id', $this->mentora->id)
             ->where('aluna_id', Auth::id())
             ->latest()
@@ -35,7 +35,7 @@ class VerMentora extends Component
 
     public function solicitarMentoria()
     {
-        set_time_limit(120); // Aumenta timeout para envio de e-mail
+        set_time_limit(120);
 
         if (Auth::id() === $this->mentora->id) {
             return;
@@ -60,26 +60,56 @@ class VerMentora extends Component
         $this->statusSolicitacao = 'pendente';
     }
 
-    // NOVA FUNÇÃO: Inscrever na aula diretamente
     public function inscreverAula($aulaId)
     {
         $aula = Event::find($aulaId);
         
         if ($aula) {
-            // Verifica se já está inscrita
             $jaInscrita = $aula->participantes()->where('user_id', Auth::id())->exists();
             
-            // Só inscreve se não estiver inscrita e não estiver lotado
             if (!$jaInscrita && !$aula->estaLotado()) {
                 $aula->participantes()->attach(Auth::id());
-                
-                // O Livewire automaticamente atualiza a View, então o botão mudará para "Inscrita"
+                // Dispara evento para atualizar a interface se necessário
+                $this->dispatch('inscricao-realizada'); 
+            }
+        }
+    }
+
+    // NOVA FUNÇÃO: Resolve o erro 403 baixando pelo PHP
+    public function baixarMaterial($aulaId)
+    {
+        $aula = Event::find($aulaId);
+
+        if ($aula && $aula->material_link) {
+            // Se for link externo (Drive, etc), apenas redireciona
+            if (strpos($aula->material_link, 'http') === 0 && strpos($aula->material_link, '/storage/') === false) {
+                return redirect()->away($aula->material_link);
+            }
+
+            // Se for arquivo local (no storage), faz o download forçado
+            // Remove o prefixo '/storage/' para pegar o caminho real no disco
+            $path = str_replace('/storage/', '', parse_url($aula->material_link, PHP_URL_PATH));
+            
+            if (Storage::disk('public')->exists($path)) {
+                return Storage::disk('public')->download($path);
+            } else {
+                // Fallback: Tenta redirecionar se o arquivo não for encontrado no disco
+                return redirect()->away($aula->material_link);
             }
         }
     }
 
     public function render()
     {
-        return view('livewire.ver-mentora')->layout('layouts.app');
+        // Busca as aulas da mentora para exibir na View
+        // Ordena por data mais recente primeiro
+        $aulasMentora = Event::where('user_id', $this->mentora->id)
+            ->orderBy('data_hora', 'desc')
+            ->take(5)
+            ->get();
+
+        return view('livewire.ver-mentora', [
+            'aulasMentora' => $aulasMentora
+        ])->layout('layouts.app');
     }
 }
