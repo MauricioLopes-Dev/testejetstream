@@ -37,49 +37,75 @@
 
                     <!-- SEÇÃO NOVA: Aulas da Mentora -->
                     @php
-                        // Busca eventos futuros desta mentora
+                        // CORREÇÃO: Mostra aulas dos últimos 90 dias (histórico recente) e futuras
+                        // Assim, se a aula acabou de acontecer, ela ainda aparece para baixar o material
                         $aulasMentora = \App\Models\Event::where('user_id', $this->mentora->id)
-                            ->where('data_hora', '>=', now()) // Apenas futuras
-                            ->orderBy('data_hora', 'asc')
-                            ->take(5)
+                            ->where('data_hora', '>=', now()->subDays(90)) 
+                            ->orderBy('data_hora', 'desc') // Mais recentes primeiro
+                            ->take(10)
                             ->get();
                     @endphp
 
                     @if($aulasMentora->isNotEmpty())
                         <div class="pt-2">
                             <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b dark:border-gray-700 pb-2 flex items-center">
-                                <span class="mr-2">📚</span> Aulas e Workshops Disponíveis
+                                <span class="mr-2">📚</span> Aulas e Workshops
                             </h3>
                             <div class="space-y-4">
                                 @foreach($aulasMentora as $aula)
                                     <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-500 transition">
                                         <div class="mb-3 sm:mb-0">
-                                            <div class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide">
-                                                {{ $aula->data_hora->format('d/m/Y \à\s H:i') }}
+                                            <div class="flex items-center gap-2">
+                                                <div class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide">
+                                                    {{ $aula->data_hora->format('d/m/Y \à\s H:i') }}
+                                                </div>
+                                                @if($aula->data_hora < now())
+                                                    <span class="text-[10px] bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 px-2 rounded-full">Encerrada</span>
+                                                @endif
                                             </div>
                                             <h4 class="text-md font-bold text-gray-800 dark:text-white">{{ $aula->titulo }}</h4>
                                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Local: {{ $aula->local ?? 'Online' }}</p>
                                         </div>
                                         
-                                        <!-- Botão de Inscrição Direta -->
+                                        <!-- Botões de Ação -->
                                         @php
                                             $inscrita = $aula->participantes()->where('user_id', Auth::id())->exists();
                                         @endphp
 
                                         @if($inscrita)
-                                            <span class="text-sm bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded-lg font-bold text-center border border-green-200 dark:border-green-800 flex items-center justify-center min-w-[100px]">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                                Inscrita
-                                            </span>
+                                            <div class="flex flex-col gap-2 min-w-[140px]">
+                                                <span class="text-sm bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded-lg font-bold text-center border border-green-200 dark:border-green-800 flex items-center justify-center">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                    Inscrita
+                                                </span>
+                                                
+                                                <!-- BOTÃO DE DOWNLOAD (Correção do Erro 403) -->
+                                                @if($aula->material_link)
+                                                    <button 
+                                                        wire:click="baixarMaterial({{ $aula->id }})"
+                                                        class="text-xs bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-3 py-2 rounded-lg font-bold text-center hover:bg-indigo-200 dark:hover:bg-indigo-800 transition flex items-center justify-center"
+                                                        title="Baixar Material da Aula"
+                                                    >
+                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                                        Material
+                                                    </button>
+                                                @endif
+                                            </div>
                                         @else
-                                            <button 
-                                                wire:click="inscreverAula({{ $aula->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="text-sm bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold transition shadow-sm text-center flex items-center justify-center min-w-[100px]"
-                                            >
-                                                <span wire:loading.remove wire:target="inscreverAula({{ $aula->id }})">Inscrever-se</span>
-                                                <span wire:loading wire:target="inscreverAula({{ $aula->id }})">...</span>
-                                            </button>
+                                            @if($aula->data_hora >= now())
+                                                <button 
+                                                    wire:click="inscreverAula({{ $aula->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="text-sm bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold transition shadow-sm text-center flex items-center justify-center min-w-[140px]"
+                                                >
+                                                    <span wire:loading.remove wire:target="inscreverAula({{ $aula->id }})">Inscrever-se</span>
+                                                    <span wire:loading wire:target="inscreverAula({{ $aula->id }})">...</span>
+                                                </button>
+                                            @else
+                                                <button disabled class="text-sm bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 px-4 py-2 rounded-lg font-bold cursor-not-allowed min-w-[140px]">
+                                                    Inscrições Encerradas
+                                                </button>
+                                            @endif
                                         @endif
                                     </div>
                                 @endforeach
@@ -87,7 +113,7 @@
                         </div>
                     @else
                         <div class="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 text-center">
-                            <p class="text-sm text-gray-500 dark:text-gray-400 italic">Esta mentora não tem aulas agendadas no momento.</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 italic">Esta mentora não tem aulas recentes.</p>
                         </div>
                     @endif
                     <!-- FIM DA SEÇÃO DE AULAS -->
