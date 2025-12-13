@@ -28,7 +28,7 @@
                         {{ __('Eventos') }}
                     </x-nav-link>
 
-                    <!-- NOVOS LINKS DA AGENDA -->
+                    <!-- Links da Agenda -->
                     <x-nav-link href="{{ route('agenda.index') }}" :active="request()->routeIs('agenda.index')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         {{ __('Agenda') }}
                     </x-nav-link>
@@ -36,7 +36,6 @@
                     <x-nav-link href="{{ route('meus.cursos') }}" :active="request()->routeIs('meus.cursos')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         {{ __('Meus Cursos') }}
                     </x-nav-link>
-                    <!-- FIM NOVOS LINKS -->
 
                     <x-nav-link href="{{ route('candidaturas.index') }}" :active="request()->routeIs('candidaturas.index')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         {{ __('Inscrições') }}
@@ -52,7 +51,7 @@
 
             <div class="hidden sm:flex sm:items-center sm:ml-6 gap-3">
                 
-                <!-- 1. Teams Dropdown (SÓ APARECE PARA ADMIN) -->
+                <!-- 1. Teams Dropdown (SÓ PARA ADMIN) -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures() && Auth::user()->role === 'admin')
                     <div class="relative mr-2">
                         <x-dropdown align="right" width="60">
@@ -97,34 +96,7 @@
                     </div>
                 @endif
 
-                <!-- 2. Dark Mode Toggle -->
-                <button 
-                    type="button" 
-                    x-data="{ 
-                        isDark: localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) 
-                    }"
-                    x-on:click="
-                        isDark = !isDark;
-                        if (isDark) {
-                            document.documentElement.classList.add('dark');
-                            localStorage.theme = 'dark';
-                        } else {
-                            document.documentElement.classList.remove('dark');
-                            localStorage.theme = 'light';
-                        }
-                    "
-                    class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-gray-400 dark:hover:bg-ellas-nav dark:hover:text-ellas-cyan transition-all duration-300 focus:outline-none"
-                    title="Alternar Tema"
-                >
-                    <svg x-show="!isDark" class="w-6 h-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    <svg x-show="isDark" style="display: none;" class="w-6 h-6 text-ellas-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                    </svg>
-                </button>
-
-                <!-- 3. User Dropdown -->
+                <!-- 2. User Dropdown (AGORA NO MEIO) -->
                 <div class="relative">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
@@ -168,6 +140,34 @@
                         </x-slot>
                     </x-dropdown>
                 </div>
+
+                <!-- 3. Dark Mode Toggle (AGORA NA DIREITA EXTREMA) -->
+                <button 
+                    type="button" 
+                    x-data="{ 
+                        isDark: localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) 
+                    }"
+                    x-on:click="
+                        isDark = !isDark;
+                        if (isDark) {
+                            document.documentElement.classList.add('dark');
+                            localStorage.theme = 'dark';
+                        } else {
+                            document.documentElement.classList.remove('dark');
+                            localStorage.theme = 'light';
+                        }
+                    "
+                    class="p-2 ml-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-gray-400 dark:hover:bg-ellas-nav dark:hover:text-ellas-cyan transition-all duration-300 focus:outline-none"
+                    title="Alternar Tema"
+                >
+                    <svg x-show="!isDark" class="w-6 h-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg x-show="isDark" style="display: none;" class="w-6 h-6 text-ellas-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+
             </div>
 
             <!-- Hamburger (Mobile) -->
@@ -184,6 +184,7 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white dark:bg-ellas-card border-t border-gray-200 dark:border-ellas-nav">
+        <!-- Mantive o menu mobile igual, pois o botão já estava na posição correta (direita da foto) -->
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                 {{ __('Dashboard') }}
@@ -191,22 +192,18 @@
             <x-responsive-nav-link href="{{ route('completar-perfil') }}" :active="request()->routeIs('completar-perfil')" class="text-slate-600 dark:text-white">
                 {{ __('Meu Perfil') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('blog.index') }}" :active="request()->routeIs('blog.*')" class="text-slate-600 dark:text-white">
-                {{ __('Histórias') }}
-            </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('eventos.index') }}" :active="request()->routeIs('eventos.*')" class="text-slate-600 dark:text-white">
                 {{ __('Eventos') }}
             </x-responsive-nav-link>
-            
-            <!-- Novos Links Mobile -->
             <x-responsive-nav-link href="{{ route('agenda.index') }}" :active="request()->routeIs('agenda.index')" class="text-slate-600 dark:text-white">
                 {{ __('Agenda') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('meus.cursos') }}" :active="request()->routeIs('meus.cursos')" class="text-slate-600 dark:text-white">
                 {{ __('Meus Cursos') }}
             </x-responsive-nav-link>
-            <!-- Fim Novos Links Mobile -->
-
+            <x-responsive-nav-link href="{{ route('blog.index') }}" :active="request()->routeIs('blog.*')" class="text-slate-600 dark:text-white">
+                {{ __('Histórias') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('candidaturas.index') }}" :active="request()->routeIs('candidaturas.index')" class="text-slate-600 dark:text-white">
                 {{ __('Inscrições') }}
             </x-responsive-nav-link>
