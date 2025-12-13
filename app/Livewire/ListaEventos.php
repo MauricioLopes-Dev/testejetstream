@@ -15,7 +15,6 @@ class ListaEventos extends Component
         if (!$evento) return;
         if ($evento->estaLotado()) return;
 
-        // Adiciona o usuário na lista de participantes
         $evento->participantes()->attach(Auth::id());
         
         session()->flash('success', 'Inscrição confirmada! O evento agora aparecerá em "Meus Cursos".');
@@ -25,18 +24,17 @@ class ListaEventos extends Component
     {
         $evento = Event::find($eventId);
         if ($evento) {
-            // detach = Remove da tabela pivô (Desinscreve)
             $evento->participantes()->detach(Auth::id());
         }
     }
 
     public function render()
     {
-        // FILTRO ATIVADO: Mostrar apenas eventos futuros (data_hora >= agora)
-        // Alterei também para 'asc' para mostrar os eventos mais próximos primeiro (amanhã, depois de amanhã...)
+        // CORREÇÃO: Usamos subDays(1) para incluir eventos das últimas 24h
+        // Isso resolve o problema de fuso horário onde o evento sumia logo após ser criado
         $eventos = Event::with('participantes')
-            ->where('data_hora', '>=', now()) 
-            ->orderBy('data_hora', 'asc') 
+            ->where('data_hora', '>=', now()->subDays(1)) 
+            ->orderBy('data_hora', 'asc')
             ->get();
 
         return view('livewire.lista-eventos', ['eventos' => $eventos])
