@@ -6,6 +6,8 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Conectada com ELLAS') }}</title>
+        <link rel="icon" type="image/png" href="{{ asset('img/ellas3.png') }}">
+        
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -38,6 +40,7 @@
                     &copy; {{ date('Y') }} Conectada com Ellas.
                 </div>
             </div>
+            
 
             <!-- Lado Direito (Imagem) -->
             <div class="hidden lg:block lg:w-1/2 relative bg-gray-900">
@@ -56,5 +59,19 @@
                 </div>
             </div>
         </div>
+//LOOP NOME
+        <script>
+    (function() {
+        // Pega o nome do app definido no seu .env ou o padrão
+        let titleText = "{{ config('app.name', 'Conectada com ELLAS') }}";
+        titleText += " • "; // Adiciona um separador para o loop
+        
+        setInterval(function() {
+            // Move a primeira letra para o final da string
+            titleText = titleText.substring(1) + titleText.substring(0, 1);
+            document.title = titleText;
+        }, 200); // Velocidade (200ms). Quanto menor, mais rápido.
+    })();
+</script>
     </body>
 </html>

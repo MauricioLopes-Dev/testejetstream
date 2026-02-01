@@ -14,6 +14,8 @@ export default {
 
     theme: {
         extend: {
+            
+            
             fontFamily: {
                 // Fontes do Projeto Ellas
                 sans: ['"Sedan SC"', ...defaultTheme.fontFamily.serif], // Usando como padrão
