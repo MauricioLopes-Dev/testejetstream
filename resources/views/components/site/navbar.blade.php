@@ -1,8 +1,8 @@
-<nav x-data="{ open: false }" class="fixed w-full z-50 bg-ellas-card/80 backdrop-blur-md border-b border-ellas-nav transition-all duration-300">
+<nav x-data="{ open: false }" class="fixed w-full z-50 bg-ellas-card/8 backdrop-blur-md border-b border-ellas-nav transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20 items-center">
             <div class="shrink-0 flex items-center">
-                <a href="{{ route('home') }}" class="font-orbitron font-bold text-3xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple via-ellas-pink to-ellas-cyan hover:scale-105 transition-transform">
+                <a href="{{ route('home') }}" class="font-orbitron font-bold text-3xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple via-ellas-pink to-ellas-cyan hover:scale-100 transition-transform">
                    Conectadas com ELLAS
                 </a>
             </div>

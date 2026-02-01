@@ -29,7 +29,7 @@
         <!-- O Laravel vai buscar esse arquivo em: resources/views/components/site/footer.blade.php -->
         @include('components.site.footer')
 
-        //LOOP LETREIRO
+       <!--LOOP LETREIRO -->
         <script>
     (function() {
         // Pega o nome do app definido no seu .env ou o padrão

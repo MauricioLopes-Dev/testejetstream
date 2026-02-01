@@ -1,4 +1,4 @@
-<footer class="bg-ellas-card border-t border-ellas-nav pt-16 pb-8">
+<footer class="bg-ellas-card/30 backdrop-blur-md border-t border-ellas-nav pt-2 pb-2">
     <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
         <div class="text-center md:text-left">
             <img src="{{ asset('img/2.png') }}" alt="Logo" class="h-16 mx-auto md:mx-0 mb-4">
@@ -13,7 +13,7 @@
             </ul>
         </div>
     </div>
-    <div class="text-center mt-12 pt-8 border-t border-ellas-nav/30">
+    <div class="text-center mt-2 pt-2 border-t border-ellas-nav/26">
         <p class="font-biorhyme text-gray-500 text-sm">© {{ date('Y') }} | Conectada com Ellas</p>
     </div>
 </footer>
