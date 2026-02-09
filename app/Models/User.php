@@ -11,7 +11,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements \Illuminate\Contracts\Auth\MustVerifyEmail
 {
     use HasApiTokens;
 
@@ -31,6 +31,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'verification_code',
         // Campos personalizados do Projeto ELLAS:
         'role',                
         'bio',                 
@@ -83,5 +84,13 @@ class User extends Authenticatable
     public function eventosParticipando()
     {
         return $this->belongsToMany(Event::class, 'event_user')->withTimestamps();
+    }
+
+    /**
+     * Sobrescreve o envio da notificação padrão para enviar o código de 6 dígitos.
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\VerifyEmailWithCode);
     }
 }

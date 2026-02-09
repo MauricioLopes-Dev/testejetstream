@@ -50,20 +50,24 @@ class FortifyServiceProvider extends ServiceProvider
          // --- LÓGICA NOVA PARA BLOQUEAR ADMIN NO LOGIN COMUM ---
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)->first();
-
+	
             // 1. Verifica se usuário existe e senha está certa
             if ($user && Hash::check($request->password, $user->password)) {
                 
-                // 2. A REGRA DE OURO: Se for Admin, BLOQUEIA!
-                // Retornar null faz o sistema achar que a senha está errada
+                // 2. Bloqueia se for Admin (regra existente)
                 if ($user->role === 'admin') {
                     return null;
                 }
 
-                // Se não for admin, deixa passar
+                // 3. Bloqueia se o e-mail não estiver verificado
+                // Isso impede o login até que o código de 6 dígitos seja validado
+                if (!$user->hasVerifiedEmail()) {
+                    return null;
+                }
+	
+                // Se passou em tudo, permite o login
                 return $user;
-
-                 }
+            }
         });
 
     }
