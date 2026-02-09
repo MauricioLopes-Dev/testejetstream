@@ -33,6 +33,8 @@ class CreateNewUser implements CreatesNewUsers
                 'name' => $input['name'],
                 'email' => $input['email'],
                 'password' => Hash::make($input['password']),
+                // Gera um código aleatório de 6 dígitos
+                'verification_code' => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT),
             ]), function (User $user) {
                 $this->createTeam($user);
             });
