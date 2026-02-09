@@ -1,56 +1,105 @@
 <section id="sobre" class="py-20 bg-ellas-card/50">
-    <div class="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-12 mb-20">
-        <div class="lg:w-1/2 relative group">
-            <div class="absolute inset-0 bg-ellas-gradient rounded-3xl blur opacity-30 group-hover:opacity-50 transition duration-500 transform rotate-3"></div>
-            
-            <img src="{{ asset('img/galeria/sobre-1.jpg') }}" 
-                 alt="Nossa História Principal" 
-                 class="relative rounded-3xl shadow-2xl border border-white/10 w-full object-cover h-[400px] transform transition duration-500 group-hover:scale-[1.02]">
-        </div>
+    <div class="max-w-7xl mx-auto px-6">
         
-        <div class="lg:w-1/2 space-y-6">
-            <h5 class="font-orbitron text-ellas-pink tracking-widest uppercase text-sm">Sobre Nós</h5>
-            <h2 class="font-orbitron text-4xl font-bold text-white">A Nossa História</h2>
-            <p class="font-biorhyme text-gray-300 leading-relaxed text-justify">
-                Idealizada por Rosana Mendes e fundada em 2025, o projeto <strong>'Conectada com Ellas'</strong> nasceu da paixão por promover a inclusão. Oferecemos oficinas interativas, eventos inspiradores e uma rede de apoio colaborativa. Acreditamos que, juntas, podemos superar barreiras e conectar mulheres de diferentes perfis para transformar o futuro da tecnologia.
-            </p>
+        <div class="slider relative w-full h-[750px] overflow-hidden rounded-3xl shadow-2xl border border-white/10 bg-black">
             
-            <div class="pt-4">
-                <a href="{{ route('site.services') }}" class="inline-flex items-center px-6 py-3 bg-ellas-pink text-white font-bold rounded-lg hover:bg-pink-600 transition shadow-lg shadow-pink-500/30">
-                    Conheça Nossos Projetos
-                </a>
+            <div class="list h-full relative">
+          @php
+    $slides = [
+        ['img' => 'sobre-1.jpg', 'title' => 'Nossa História', 'type' => 'Fundação 2025', 'desc' => 'O projeto Conectada com Ellas nasceu da paixão por promover a inclusão tecnológica.'],
+        ['img' => 'sobre-2.jpg', 'title' => 'Oficinas', 'type' => 'Interatividade', 'desc' => 'Oferecemos oficinas práticas que capacitam mulheres de todas as idades no mundo digital.'],
+        ['img' => 'sobre-3.jpg', 'title' => 'Comunidade', 'type' => 'Rede de Apoio', 'desc' => 'Uma rede colaborativa onde juntas superamos as barreiras do mercado de trabalho.'],
+        ['img' => 'sobre-4.jpg', 'title' => 'Futuro', 'type' => 'Inovação', 'desc' => 'Conectamos talentos femininos com as oportunidades reais da era da tecnologia.'],
+        ['img' => 'sobre-5.jpg', 'title' => 'Workshop', 'type' => 'Prática', 'desc' => 'Momentos de aprendizado intenso e troca de experiências fundamentais.'],
+        // Novos itens adicionados abaixo:
+        ['img' => 'sobre-6.jpg', 'title' => 'Conexões', 'type' => 'Networking', 'desc' => 'Expandindo horizontes através de parcerias estratégicas no setor de TI.'],
+        ['img' => 'sobre-7.jpg', 'title' => 'Liderança', 'type' => 'Empoderamento', 'desc' => 'Desenvolvendo competências para que mulheres ocupem cargos de decisão.'],
+        ['img' => 'sobre-9.jpg', 'title' => 'Eventos', 'type' => 'Presença', 'desc' => 'Participação ativa nos maiores debates sobre tecnologia e sociedade.'],
+        ['img' => 'sobre-10.jpg', 'title' => 'Impacto', 'type' => 'Resultados', 'desc' => 'Transformando realidades e criando um legado para as próximas gerações.'],
+    ];
+@endphp
+
+                @foreach($slides as $slide)
+                <div class="item absolute inset-0 flex flex-col lg:flex-row opacity-0 transition-opacity duration-1000 ease-in-out">
+                    
+                    <div class="content lg:w-5/12 w-full h-full p-8 lg:p-20 z-20 flex flex-col justify-center bg-black/60 backdrop-blur-md border-r border-white/5">
+                        <div class="space-y-4 max-w-md">
+                            <h5 class="font-orbitron text-ellas-pink tracking-[0.3em] uppercase text-xs sm:text-sm drop-shadow-lg">
+                                {{ $slide['type'] }}
+                            </h5>
+                            
+                            <h2 class="font-orbitron text-4xl lg:text-6xl font-bold text-white leading-tight drop-shadow-2xl">
+                                {{ $slide['title'] }}
+                            </h2>
+                            
+                            <div class="w-16 h-1.5 bg-ellas-pink rounded-full"></div>
+                            
+                            <p class="font-biorhyme text-gray-100 text-lg leading-relaxed pt-4 drop-shadow-md">
+                                {{ $slide['desc'] }}
+                            </p>
+                            
+                            <div class="pt-8">
+                                <a href="{{ route('site.services') }}" class="inline-flex items-center px-10 py-4 bg-ellas-pink text-white font-bold rounded-full hover:bg-pink-600 transition-all shadow-lg shadow-pink-500/40 transform hover:-translate-y-1">
+                                    Saiba Mais
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-0 lg:static lg:w-full h-full overflow-hidden -z-10 lg:z-0">
+                        <img src="{{ asset('img/galeria/' . $slide['img']) }}" 
+                             class="w-full h-full object-cover">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent hidden lg:block"></div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            <div class="absolute bottom-10 right-10 flex gap-4 z-30">
+                <button class="prev w-14 h-14 border border-white/20 text-white flex items-center justify-center rounded-full hover:bg-ellas-pink hover:border-ellas-pink transition-all backdrop-blur-sm"> < </button>
+                <button class="next w-14 h-14 bg-white text-black flex items-center justify-center rounded-full hover:bg-ellas-pink hover:text-white transition-all"> > </button>
             </div>
         </div>
     </div>
-
-    <div class="max-w-7xl mx-auto px-6">
-        <h3 class="font-orbitron text-2xl text-white mb-8 border-l-4 border-ellas-pink pl-4">
-            Nossos Momentos
-        </h3>
-        
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-            
-            @php
-                // Lista das fotos sequenciais (ajuste se você nomeou diferente de sobre-2, sobre-3...)
-                $fotos = [
-                    'sobre-2.jpg', 
-                    'sobre-3.jpg', 
-                    'sobre-4.jpg', 
-                    'sobre-5.jpg', 
-                    'sobre-6.jpg', 
-                    'sobre-7.jpg'
-                ];
-            @endphp
-
-            @foreach($fotos as $foto)
-                <div class="relative overflow-hidden rounded-xl group h-48 sm:h-64 cursor-pointer">
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition z-10"></div>
-                    <img src="{{ asset('img/galeria/' . $foto) }}" 
-                         alt="Momento Projeto Ellas" 
-                         class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-in-out">
-                </div>
-            @endforeach
-            
-        </div>
-    </div>
 </section>
+
+<style>
+    .slider .list .item.active { opacity: 1 !important; position: relative; }
+    .slider .list .item.active h2, 
+    .slider .list .item.active p,
+    .slider .list .item.active h5,
+    .slider .list .item.active .pt-8 {
+        animation: slideIn 0.8s ease-out forwards;
+    }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nextBtn = document.querySelector('.next');
+        const prevBtn = document.querySelector('.prev');
+        const items = document.querySelectorAll('.slider .list .item');
+        let active = 0;
+
+        function showSlider() {
+            items.forEach(item => item.classList.remove('active'));
+            items[active].classList.add('active');
+        }
+
+        nextBtn.onclick = () => {
+            active = (active + 1 >= items.length) ? 0 : active + 1;
+            showSlider();
+        };
+
+        prevBtn.onclick = () => {
+            active = (active - 1 < 0) ? items.length - 1 : active - 1;
+            showSlider();
+        };
+
+        showSlider();
+    });
+</script>

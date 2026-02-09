@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Conectada com ELLAS') }}</title>
-        <<link rel="icon" type="image/png" href="{{ asset('img/ellas3.png') }}">
+        <link rel="icon" type="image/png" href="{{ asset('img/ellas3.png') }}">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
@@ -33,7 +33,7 @@
         @stack('modals')
         @livewireScripts
 
-//LETREIRO LOOP
+
         <script>
     (function() {
         // Pega o nome do app definido no seu .env ou o padrão

@@ -59,7 +59,7 @@
                 </div>
             </div>
         </div>
-//LOOP NOME
+
         <script>
     (function() {
         // Pega o nome do app definido no seu .env ou o padrão
