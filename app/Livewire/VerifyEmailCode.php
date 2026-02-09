@@ -7,15 +7,29 @@ use Illuminate\Support\Facades\Auth;
 
 class VerifyEmailCode extends Component
 {
-    public $code;
+    // Usamos um array para os 6 dígitos para facilitar a interface
+    public $digits = ['', '', '', '', '', ''];
+    public $code = '';
 
-    protected $rules = [
-        'code' => 'required|string|size:6',
-    ];
+    public function updatedDigits()
+    {
+        // Sempre que um dígito mudar, atualizamos a string completa do código
+        $this->code = implode('', $this->digits);
+        
+        // Se já tiver 6 dígitos, tenta validar automaticamente
+        if (strlen($this->code) === 6) {
+            $this->verify();
+        }
+    }
 
     public function verify()
     {
-        $this->validate();
+        $this->code = implode('', $this->digits);
+
+        if (strlen($this->code) !== 6) {
+            $this->addError('code', 'Por favor, insira os 6 dígitos.');
+            return;
+        }
 
         $user = Auth::user();
 
@@ -32,8 +46,10 @@ class VerifyEmailCode extends Component
             return redirect()->intended(config('fortify.home'));
         }
 
-        // Se o código estiver errado, adiciona um erro
-        $this->addError('code', 'O código de verificação está incorreto.');
+        // Se o código estiver errado, limpa os campos e mostra erro
+        $this->digits = ['', '', '', '', '', ''];
+        $this->code = '';
+        $this->addError('code', 'Código incorreto. Verifique seu e-mail e tente novamente.');
     }
 
     public function render()
