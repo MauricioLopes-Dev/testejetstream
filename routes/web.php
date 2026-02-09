@@ -21,6 +21,7 @@ use App\Livewire\MeusCursos;       // <--- Novo componente
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\MentorRegisterController;
 // Models para a Home Page
 use App\Models\User;
 use App\Models\Event;
@@ -116,6 +117,12 @@ Route::get('/depoimentos', function () {
     ]);
 })->name('site.testimonials');
 
+
+// Rotas de Registro de Mentora
+Route::middleware('guest')->group(function () {
+    Route::get('/cadastro-mentora', [MentorRegisterController::class, 'create'])->name('register.mentor');
+    Route::post('/cadastro-mentora', [MentorRegisterController::class, 'store']);
+});
 
 /*
 |--------------------------------------------------------------------------

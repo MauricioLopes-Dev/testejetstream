@@ -14,12 +14,31 @@
         <p class="font-biorhyme text-gray-400 text-sm mt-2">Junte-se à nossa comunidade tecnológica.</p>
     </div>
 
-    <div class="flex mb-8 border-b border-ellas-nav">
+    <div class="flex mb-6 border-b border-ellas-nav">
         <a href="{{ route('login') }}" class="pb-2 px-4 font-orbitron text-gray-500 hover:text-white transition-colors">
             Login
         </a>
         <a href="#" class="pb-2 px-4 font-orbitron text-ellas-cyan border-b-2 border-ellas-cyan transition-colors">
             Cadastro
+        </a>
+    </div>
+
+    <div class="mb-8 relative group">
+        <div class="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl opacity-60 group-hover:opacity-100 blur transition duration-200"></div>
+        
+        <a href="{{ route('register.mentor') }}" class="relative block bg-ellas-dark rounded-xl p-4 flex items-center justify-between border border-ellas-purple/30 hover:border-ellas-pink/50 transition-colors">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-lg shrink-0">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div>
+                    <h3 class="font-orbitron text-white text-sm font-bold uppercase tracking-wide">Sou Especialista</h3>
+                    <p class="font-biorhyme text-gray-300 text-xs">Quero me cadastrar como Mentora</p>
+                </div>
+            </div>
+            <div class="text-pink-500 group-hover:translate-x-1 transition-transform">
+                <i class="fas fa-arrow-right"></i>
+            </div>
         </a>
     </div>
 
