@@ -1,14 +1,12 @@
 <x-guest-layout>
-    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-y-auto">
+    <a href="{{ route('register') }}" class="absolute top-6 left-6 text-gray-400 hover:text-ellas-cyan transition-colors flex items-center gap-2 group z-50">
+        <div class="w-8 h-8 rounded-full border border-ellas-nav flex items-center justify-center group-hover:border-ellas-cyan group-hover:bg-ellas-cyan/10 transition-all">
+            <i class="fas fa-arrow-left text-xs group-hover:-translate-x-1 transition-transform"></i>
+        </div>
+        <span class="font-orbitron text-sm hidden sm:inline">Voltar para Cadastro</span>
+    </a>
 
-        <a href="{{ route('register') }}" class="absolute top-6 left-6 text-gray-400 hover:text-ellas-cyan transition-colors flex items-center gap-2 group z-50">
-            <div class="w-8 h-8 rounded-full border border-ellas-nav flex items-center justify-center group-hover:border-ellas-cyan group-hover:bg-ellas-cyan/10 transition-all">
-                <i class="fas fa-arrow-left text-xs group-hover:-translate-x-1 transition-transform"></i>
-            </div>
-            <span class="font-orbitron text-sm hidden sm:inline">Voltar para Cadastro</span>
-        </a>
-
-        <div class="w-full max-w-md mt-10">
+    <div class="w-full max-w-md mx-auto mt-20 mb-10">
             
             <div class="mb-8 text-center sm:text-left">
                 <a href="/" class="hidden lg:block font-orbitron font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple via-ellas-pink to-ellas-cyan mb-2 py-2 leading-normal">
@@ -117,5 +115,4 @@
                 </form>
             </div>
         </div>
-    </div>
 </x-guest-layout>

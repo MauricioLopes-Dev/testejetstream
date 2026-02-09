@@ -20,11 +20,11 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-ellas-dark text-white h-screen overflow-hidden">
+    <body class="font-sans antialiased bg-ellas-dark text-white min-h-screen">
         
-        <div class="flex h-full">
+        <div class="flex min-h-screen">
             <!-- Lado Esquerdo (Formulário) -->
-            <div class="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-12 lg:px-24 bg-ellas-card relative z-10 shadow-[20px_0_50px_rgba(0,0,0,0.5)]">
+            <div class="w-full lg:w-1/2 flex flex-col justify-start py-12 px-8 sm:px-12 lg:px-24 bg-ellas-card relative z-10 shadow-[20px_0_50px_rgba(0,0,0,0.5)]">
                 
                 <div class="lg:hidden mb-8 text-center">
                     <a href="/" class="font-orbitron font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">
