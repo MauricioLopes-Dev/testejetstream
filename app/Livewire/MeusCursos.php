@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Event;
+use App\Models\Solicitacao; // Adicionada a model correta conforme seu print
 
 class MeusCursos extends Component
 {
@@ -14,30 +15,17 @@ class MeusCursos extends Component
         $aula = Event::find($aulaId);
 
         if ($aula && $aula->material_link) {
-            // 1. Verifica se é um link externo (Google Drive, Dropbox, YouTube, etc.)
-            // Se não tiver "/storage/" no link, assumimos que é externo
             if (strpos($aula->material_link, '/storage/') === false && filter_var($aula->material_link, FILTER_VALIDATE_URL)) {
                 return redirect()->away($aula->material_link);
             }
 
-            // 2. Tratamento para Arquivo Local (Upload)
-            // O link vem como: /storage/materiais/arquivo.pdf
-            // O disco 'public' espera: materiais/arquivo.pdf
-            
-            // Pega apenas o caminho (remove o domínio se houver)
             $path = parse_url($aula->material_link, PHP_URL_PATH);
-            
-            // Remove o prefixo '/storage' para achar o arquivo real no disco
-            // ltrim remove a barra inicial extra se sobrar
             $relativePath = ltrim(str_replace('/storage', '', $path), '/');
 
-            // Verifica se o arquivo realmente existe no disco antes de baixar
             if (Storage::disk('public')->exists($relativePath)) {
                 return Storage::disk('public')->download($relativePath);
             } 
             
-            // 3. Fallback: Se não achou o arquivo físico, tenta abrir o link direto
-            // (Isso ajuda se o link simbólico estiver quebrado mas a URL funcionar)
             return redirect()->away($aula->material_link);
         }
     }
@@ -46,6 +34,7 @@ class MeusCursos extends Component
     {
         $user = Auth::user();
 
+        // 1. Lógica original dos seus cursos/eventos
         $todosCursos = $user->eventosParticipando()
                             ->orderByDesc('data_hora')
                             ->get();
@@ -57,9 +46,17 @@ class MeusCursos extends Component
 
         $aulasPassadas = $todosCursos->diff($proximasAulas);
 
+        // 2. BUSCA AS SOLICITAÇÕES DE MENTORIA (Model Solicitacao)
+        // Buscamos as solicitações que pertencem ao usuário logado
+        $candidaturas = Solicitacao::where('id', $user->id)
+            ->with('mentora') // Assume que existe o relacionamento 'mentora' na model Solicitacao
+            ->latest()
+            ->get();
+
         return view('livewire.meus-cursos', [
             'proximasAulas' => $proximasAulas,
-            'aulasPassadas' => $aulasPassadas
+            'aulasPassadas' => $aulasPassadas,
+            'candidaturas'  => $candidaturas // Agora a variável existe!
         ])->layout('layouts.app');
     }
 }

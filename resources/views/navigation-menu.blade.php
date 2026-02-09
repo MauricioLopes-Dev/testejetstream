@@ -38,9 +38,6 @@
                         {{ __('Cursos') }}
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('candidaturas.index') }}" :active="request()->routeIs('candidaturas.index')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
-                        {{ __('Inscrições') }}
-                    </x-nav-link>
 
                     @if(Auth::user()->role === 'mentora' || Auth::user()->role === 'admin')
                         <x-nav-link href="{{ route('solicitacoes.index') }}" :active="request()->routeIs('solicitacoes.index')" class="font-orbitron text-ellas-pink font-bold hover:text-ellas-purple">
@@ -204,9 +201,7 @@
             <x-responsive-nav-link href="{{ route('meus.cursos') }}" :active="request()->routeIs('meus.cursos')" class="text-slate-600 dark:text-white">
                 {{ __('Meus Cursos') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('candidaturas.index') }}" :active="request()->routeIs('candidaturas.index')" class="text-slate-600 dark:text-white">
-                {{ __('Inscrições') }}
-            </x-responsive-nav-link>
+    
             @if(Auth::user()->role === 'mentora' || Auth::user()->role === 'admin')
                 <x-responsive-nav-link href="{{ route('solicitacoes.index') }}" :active="request()->routeIs('solicitacoes.index')" class="text-ellas-pink font-bold">
                     {{ __('Gestão') }}
