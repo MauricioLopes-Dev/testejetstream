@@ -1,24 +1,33 @@
+@php
+    use App\Models\SiteSetting;
+    
+    // Busca slides do banco ou usa padrão
+    $slidesJson = SiteSetting::get('about_slides');
+    
+    if ($slidesJson) {
+        $slides = json_decode($slidesJson, true);
+    } else {
+        // Slides padrão
+        $slides = [
+            ['img' => 'sobre-1.jpg', 'title' => 'Nossa História', 'type' => 'Fundação 2025', 'desc' => 'O projeto Conectada com Ellas nasceu da paixão por promover a inclusão tecnológica.'],
+            ['img' => 'sobre-2.jpg', 'title' => 'Oficinas', 'type' => 'Interatividade', 'desc' => 'Oferecemos oficinas práticas que capacitam mulheres de todas as idades no mundo digital.'],
+            ['img' => 'sobre-3.jpg', 'title' => 'Comunidade', 'type' => 'Rede de Apoio', 'desc' => 'Uma rede colaborativa onde juntas superamos as barreiras do mercado de trabalho.'],
+            ['img' => 'sobre-4.jpg', 'title' => 'Futuro', 'type' => 'Inovação', 'desc' => 'Conectamos talentos femininos com as oportunidades reais da era da tecnologia.'],
+            ['img' => 'sobre-5.jpg', 'title' => 'Workshop', 'type' => 'Prática', 'desc' => 'Momentos de aprendizado intenso e troca de experiências fundamentais.'],
+            ['img' => 'sobre-6.jpg', 'title' => 'Conexões', 'type' => 'Networking', 'desc' => 'Expandindo horizontes através de parcerias estratégicas no setor de TI.'],
+            ['img' => 'sobre-7.jpg', 'title' => 'Liderança', 'type' => 'Empoderamento', 'desc' => 'Desenvolvendo competências para que mulheres ocupem cargos de decisão.'],
+            ['img' => 'sobre-9.jpg', 'title' => 'Eventos', 'type' => 'Presença', 'desc' => 'Participação ativa nos maiores debates sobre tecnologia e sociedade.'],
+            ['img' => 'sobre-10.jpg', 'title' => 'Impacto', 'type' => 'Resultados', 'desc' => 'Transformando realidades e criando um legado para as próximas gerações.'],
+        ];
+    }
+@endphp
+
 <section id="sobre" class="py-20 bg-ellas-card/50">
     <div class="max-w-7xl mx-auto px-6">
         
         <div class="slider relative w-full h-[750px] overflow-hidden rounded-3xl shadow-2xl border border-white/10 bg-black">
             
             <div class="list h-full relative">
-          @php
-    $slides = [
-        ['img' => 'sobre-1.jpg', 'title' => 'Nossa História', 'type' => 'Fundação 2025', 'desc' => 'O projeto Conectada com Ellas nasceu da paixão por promover a inclusão tecnológica.'],
-        ['img' => 'sobre-2.jpg', 'title' => 'Oficinas', 'type' => 'Interatividade', 'desc' => 'Oferecemos oficinas práticas que capacitam mulheres de todas as idades no mundo digital.'],
-        ['img' => 'sobre-3.jpg', 'title' => 'Comunidade', 'type' => 'Rede de Apoio', 'desc' => 'Uma rede colaborativa onde juntas superamos as barreiras do mercado de trabalho.'],
-        ['img' => 'sobre-4.jpg', 'title' => 'Futuro', 'type' => 'Inovação', 'desc' => 'Conectamos talentos femininos com as oportunidades reais da era da tecnologia.'],
-        ['img' => 'sobre-5.jpg', 'title' => 'Workshop', 'type' => 'Prática', 'desc' => 'Momentos de aprendizado intenso e troca de experiências fundamentais.'],
-        // Novos itens adicionados abaixo:
-        ['img' => 'sobre-6.jpg', 'title' => 'Conexões', 'type' => 'Networking', 'desc' => 'Expandindo horizontes através de parcerias estratégicas no setor de TI.'],
-        ['img' => 'sobre-7.jpg', 'title' => 'Liderança', 'type' => 'Empoderamento', 'desc' => 'Desenvolvendo competências para que mulheres ocupem cargos de decisão.'],
-        ['img' => 'sobre-9.jpg', 'title' => 'Eventos', 'type' => 'Presença', 'desc' => 'Participação ativa nos maiores debates sobre tecnologia e sociedade.'],
-        ['img' => 'sobre-10.jpg', 'title' => 'Impacto', 'type' => 'Resultados', 'desc' => 'Transformando realidades e criando um legado para as próximas gerações.'],
-    ];
-@endphp
-
                 @foreach($slides as $slide)
                 <div class="item absolute inset-0 flex flex-col lg:flex-row opacity-0 transition-opacity duration-1000 ease-in-out">
                     

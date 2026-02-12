@@ -17,6 +17,7 @@ use App\Livewire\AprovarMentoras;
 use App\Livewire\Blog;
 use App\Livewire\AgendaCalendario;
 use App\Livewire\MeusCursos;
+use App\Livewire\EditarSobre;
 
 // Rota inicial do site
 Route::get('/', function () {
@@ -89,6 +90,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/aulas/gerenciar', GerenciarAulas::class)->name('aulas.gerenciar');
     Route::get('/historias/criar', CriarHistoria::class)->name('historias.criar');
     Route::get('/depoimentos', GerenciarDepoimentos::class)->name('depoimentos.gerenciar');
+    Route::get('/sobre/editar', EditarSobre::class)->name('sobre.editar');
     
     // Perfil Admin
     Route::get('/perfil', [AdminDashboardController::class, 'perfil'])->name('perfil');
