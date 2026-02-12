@@ -12,6 +12,25 @@
     </head>
     <body class="font-sans antialiased bg-ellas-dark text-white selection:bg-ellas-pink selection:text-white overflow-x-hidden">
 
+        @if(session('success_box'))
+            <div x-data="{ show: true }" x-show="show" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-ellas-dark/90 backdrop-blur-sm">
+                <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden text-center">
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-ellas-pink/20 rounded-full blur-2xl"></div>
+                    
+                    <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center text-green-500 mx-auto mb-6">
+                        <i class="fas fa-check-circle text-4xl"></i>
+                    </div>
+                    
+                    <h3 class="font-orbitron text-2xl font-bold text-white mb-4">Cadastro Enviado!</h3>
+                    <p class="font-biorhyme text-gray-400 mb-8">{{ session('success_box') }}</p>
+                    
+                    <button @click="show = false" class="w-full py-4 bg-gradient-to-r from-ellas-purple to-ellas-pink rounded-xl font-orbitron font-bold text-white shadow-lg hover:scale-[1.02] transition-all">
+                        ENTENDI
+                    </button>
+                </div>
+            </div>
+        @endif
+
         <nav x-data="{ open: false }" class="fixed w-full z-50 bg-ellas-card/80 backdrop-blur-md border-b border-ellas-nav transition-all duration-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-20 items-center">

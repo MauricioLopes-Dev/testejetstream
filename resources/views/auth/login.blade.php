@@ -6,7 +6,8 @@
         <span class="font-orbitron text-sm hidden sm:inline">Voltar</span>
     </a>
 
-    <div class="mb-10 mt-8"> <a href="/" class="hidden lg:block font-orbitron font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple via-ellas-pink to-ellas-cyan mb-2">
+    <div class="mb-10 mt-8"> 
+        <a href="/" class="hidden lg:block font-orbitron font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple via-ellas-pink to-ellas-cyan mb-2">
             Conectadas com ELLAS
         </a>
         <h2 class="font-orbitron text-2xl text-white">Bem-vinda de volta!</h2>
@@ -24,11 +25,11 @@
 
     <x-validation-errors class="mb-4" />
 
-    @session('status')
+    @if (session('status'))
         <div class="mb-4 font-medium text-sm text-green-400">
-            {{ $value }}
+            {{ session('status') }}
         </div>
-    @endsession
+    @endif
 
     <form method="POST" action="{{ route('login') }}" class="space-y-6">
         @csrf
@@ -58,6 +59,15 @@
                 </div>
                 <x-input id="password" class="block w-full pl-10 bg-ellas-dark border-ellas-nav focus:border-ellas-pink focus:ring focus:ring-ellas-pink/20 transition-all" type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
             </div>
+        </div>
+
+        <div class="space-y-2">
+            <x-label for="tipo" value="Entrar como:" />
+            <select name="tipo" id="tipo" class="block w-full bg-ellas-dark border-ellas-nav text-white focus:border-ellas-pink focus:ring focus:ring-ellas-pink/20 rounded-lg shadow-inner py-3 font-biorhyme">
+                <option value="aluna">Aluna</option>
+                <option value="mentora">Mentora</option>
+                <option value="admin">Administrador</option>
+            </select>
         </div>
 
         <div class="flex items-center">
