@@ -10,6 +10,10 @@ use App\Livewire\MinhasSolicitacoes;
 use App\Livewire\MinhasCandidaturas;
 use App\Livewire\ListaEventos;
 use App\Livewire\CriarEvento;
+use App\Livewire\CriarHistoria;
+use App\Livewire\GerenciarDepoimentos;
+use App\Livewire\GerenciarAulas;
+use App\Livewire\AprovarMentoras;
 
 // Rota inicial do site
 Route::get('/', function () {
@@ -48,25 +52,32 @@ Route::middleware(['auth:web'])->group(function () {
         return view('aluna.dashboard');
     })->name('dashboard');
 
-    // Funcionalidades Originais do Projeto
     Route::get('/completar-perfil', CompletarPerfil::class)->name('completar-perfil');
-
-    // Módulo de Mentorias
     Route::get('/mentoras', GaleriaMentoras::class)->name('mentoras.index');
     Route::get('/mentoras/{id}', VerMentora::class)->name('mentoras.show');
     Route::get('/minhas-solicitacoes', MinhasSolicitacoes::class)->name('solicitacoes.index');
     Route::get('/meus-pedidos', MinhasCandidaturas::class)->name('candidaturas.index');
-
-    // Módulo de Eventos e Aulas
     Route::get('/eventos', ListaEventos::class)->name('eventos.index');
-    Route::get('/eventos/criar', CriarEvento::class)->name('eventos.criar');
 });
 
-// Painel Admin
+// Painel Admin - Todas as funcionalidades solicitadas
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    
+    // Aprovação de Mentoras
+    Route::get('/mentoras-pendentes', AprovarMentoras::class)->name('mentoras.pendentes');
     Route::post('/aprovar-mentora/{id}', [AdminDashboardController::class, 'aprovar'])->name('aprovar_mentora');
     Route::post('/reprovar-mentora/{id}', [AdminDashboardController::class, 'reprovar'])->name('reprovar_mentora');
+
+    // Gestão de Conteúdo
+    Route::get('/eventos/criar', CriarEvento::class)->name('eventos.criar');
+    Route::get('/aulas/gerenciar', GerenciarAulas::class)->name('aulas.gerenciar');
+    Route::get('/historias/criar', CriarHistoria::class)->name('historias.criar');
+    Route::get('/depoimentos', GerenciarDepoimentos::class)->name('depoimentos.gerenciar');
+    
+    // Perfil Admin
+    Route::get('/perfil', [AdminDashboardController::class, 'perfil'])->name('perfil');
+    Route::post('/perfil/senha', [AdminDashboardController::class, 'alterarSenha'])->name('perfil.senha');
 });
 
 // Painel Mentora

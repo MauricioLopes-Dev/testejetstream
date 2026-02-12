@@ -7,6 +7,8 @@ use App\Models\Mentora;
 use App\Models\User;
 use App\Notifications\MentoraAprovada;
 use App\Notifications\MentoraReprovada;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
@@ -42,5 +44,30 @@ class AdminDashboardController extends Controller
         $mentora->notify(new MentoraReprovada());
 
         return back()->with('status', 'Mentora reprovada. Ela poderá tentar novamente em 30 dias.');
+    }
+
+    public function perfil()
+    {
+        return view('admin.perfil');
+    }
+
+    public function alterarSenha(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $admin = Auth::guard('admin')->user();
+
+        if (!Hash::check($request->current_password, $admin->password)) {
+            return back()->withErrors(['current_password' => 'A senha atual está incorreta.']);
+        }
+
+        $admin->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        return back()->with('status', 'Senha alterada com sucesso!');
     }
 }
