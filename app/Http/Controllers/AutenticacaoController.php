@@ -16,7 +16,17 @@ class AutenticacaoController extends Controller
 {
     public function mostrarLogin()
     {
-        return view('auth.login');
+        return view('auth.login', ['tipo' => 'aluna', 'titulo' => 'Acesse sua conta']);
+    }
+
+    public function mostrarLoginMentora()
+    {
+        return view('auth.login', ['tipo' => 'mentora', 'titulo' => 'Painel de Mentoria']);
+    }
+
+    public function mostrarLoginAdmin()
+    {
+        return view('auth.login', ['tipo' => 'admin', 'titulo' => 'Painel do Admin']);
     }
 
     public function mostrarCadastro()
@@ -66,7 +76,7 @@ class AutenticacaoController extends Controller
             return back()->withErrors(['email' => 'Seu cadastro de mentoria foi reprovado, tente novamente em 30 dias após a reprovação.']);
         }
 
-        // Verificação se já existe (não reprovado recentemente)
+        // Verificação se já existe
         $existente = Mentora::where('email', $request->email)->first();
         if ($existente) {
             if ($existente->status_aprovacao === 'aprovado') {
@@ -101,14 +111,14 @@ class AutenticacaoController extends Controller
 
     public function login(Request $request)
     {
+        $tipo = $request->route()->defaults['tipo'] ?? $request->tipo ?? 'aluna';
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-            'tipo' => 'required|in:aluna,mentora,admin',
         ]);
 
         $credentials = $request->only('email', 'password');
-        $tipo = $request->tipo;
         $guard = ($tipo === 'aluna') ? 'web' : $tipo;
 
         if (Auth::guard($guard)->attempt($credentials)) {

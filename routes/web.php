@@ -9,12 +9,24 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Rotas de Autenticação Customizadas
+// Rotas de Autenticação Aluna (Padrão)
 Route::get('/login', [AutenticacaoController::class, 'mostrarLogin'])->name('login');
-Route::post('/login', [AutenticacaoController::class, 'login']);
+Route::post('/login', [AutenticacaoController::class, 'login'])->defaults('tipo', 'aluna');
+
+// Rota de Login Mentora via URL
+Route::get('/mentora', [AutenticacaoController::class, 'mostrarLoginMentora'])->name('mentora.login');
+Route::post('/mentora/login', [AutenticacaoController::class, 'login'])->defaults('tipo', 'mentora')->name('mentora.post_login');
+
+// Rota de Login Admin via URL
+Route::get('/admin', [AutenticacaoController::class, 'mostrarLoginAdmin'])->name('admin.login');
+Route::post('/admin/login', [AutenticacaoController::class, 'login'])->defaults('tipo', 'admin')->name('admin.post_login');
+
+// Rotas de Cadastro
 Route::get('/register', [AutenticacaoController::class, 'mostrarCadastro'])->name('register');
 Route::post('/register/aluna', [AutenticacaoController::class, 'cadastrarAluna'])->name('cadastro.aluna');
 Route::post('/register/mentora', [AutenticacaoController::class, 'cadastrarMentora'])->name('cadastro.mentora');
+
+// Logout
 Route::post('/logout', [AutenticacaoController::class, 'logout'])->name('logout');
 
 // Rota de Verificação de E-mail para Mentora
