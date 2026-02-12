@@ -101,3 +101,4 @@ Route::middleware(['auth:mentora'])->prefix('mentora')->name('mentora.')->group(
         return view('mentora.dashboard');
     })->name('dashboard');
 });
+// Sync v2
