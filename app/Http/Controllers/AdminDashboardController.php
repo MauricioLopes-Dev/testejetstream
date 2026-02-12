@@ -71,3 +71,4 @@ class AdminDashboardController extends Controller
         return back()->with('status', 'Senha alterada com sucesso!');
     }
 }
+// Sincronização Final ELLAS
