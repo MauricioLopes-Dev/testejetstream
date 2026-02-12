@@ -3,6 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AutenticacaoController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Livewire\CompletarPerfil;
+use App\Livewire\GaleriaMentoras;
+use App\Livewire\VerMentora;
+use App\Livewire\MinhasSolicitacoes;
+use App\Livewire\MinhasCandidaturas;
+use App\Livewire\ListaEventos;
+use App\Livewire\CriarEvento;
 
 // Rota inicial do site
 Route::get('/', function () {
@@ -35,11 +42,24 @@ Route::get('/mentora/verificacao', function() {
 })->name('mentora.verificacao');
 Route::post('/mentora/verificar-codigo', [AutenticacaoController::class, 'verificarCodigo'])->name('mentora.verificar_codigo');
 
-// Dashboard Aluna (User padrão)
+// Rotas Protegidas para Aluna (User padrão)
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/dashboard', function () {
         return view('aluna.dashboard');
     })->name('dashboard');
+
+    // Funcionalidades Originais do Projeto
+    Route::get('/completar-perfil', CompletarPerfil::class)->name('completar-perfil');
+
+    // Módulo de Mentorias
+    Route::get('/mentoras', GaleriaMentoras::class)->name('mentoras.index');
+    Route::get('/mentoras/{id}', VerMentora::class)->name('mentoras.show');
+    Route::get('/minhas-solicitacoes', MinhasSolicitacoes::class)->name('solicitacoes.index');
+    Route::get('/meus-pedidos', MinhasCandidaturas::class)->name('candidaturas.index');
+
+    // Módulo de Eventos e Aulas
+    Route::get('/eventos', ListaEventos::class)->name('eventos.index');
+    Route::get('/eventos/criar', CriarEvento::class)->name('eventos.criar');
 });
 
 // Painel Admin
