@@ -14,6 +14,9 @@ use App\Livewire\CriarHistoria;
 use App\Livewire\GerenciarDepoimentos;
 use App\Livewire\GerenciarAulas;
 use App\Livewire\AprovarMentoras;
+use App\Livewire\Blog;
+use App\Livewire\AgendaCalendario;
+use App\Livewire\MeusCursos;
 
 // Rota inicial do site
 Route::get('/', function () {
@@ -52,12 +55,24 @@ Route::middleware(['auth:web'])->group(function () {
         return view('aluna.dashboard');
     })->name('dashboard');
 
+    // Funcionalidades Originais do Projeto
     Route::get('/completar-perfil', CompletarPerfil::class)->name('completar-perfil');
     Route::get('/mentoras', GaleriaMentoras::class)->name('mentoras.index');
     Route::get('/mentoras/{id}', VerMentora::class)->name('mentoras.show');
     Route::get('/minhas-solicitacoes', MinhasSolicitacoes::class)->name('solicitacoes.index');
     Route::get('/meus-pedidos', MinhasCandidaturas::class)->name('candidaturas.index');
+    
+    // Módulo de Blog/Histórias
+    Route::get('/blog', Blog::class)->name('blog.index');
+    
+    // Módulo de Eventos e Aulas
     Route::get('/eventos', ListaEventos::class)->name('eventos.index');
+    
+    // Módulo de Agenda
+    Route::get('/agenda', AgendaCalendario::class)->name('agenda.index');
+    
+    // Módulo de Cursos
+    Route::get('/meus-cursos', MeusCursos::class)->name('meus.cursos');
 });
 
 // Painel Admin - Todas as funcionalidades solicitadas
