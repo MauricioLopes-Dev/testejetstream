@@ -67,4 +67,20 @@ class User extends Authenticatable
         return $this->belongsToMany(Curso::class, 'curso_inscricoes')
                     ->withPivot('inscrito_em');
     }
+
+    /**
+     * Relacionamento com as presenças da aluna.
+     */
+    public function presencas()
+    {
+        return $this->hasMany(Presenca::class);
+    }
+
+    /**
+     * Relacionamento com as mensagens enviadas/recebidas pela aluna.
+     */
+    public function mensagens()
+    {
+        return $this->hasMany(MensagemChat::class);
+    }
 }

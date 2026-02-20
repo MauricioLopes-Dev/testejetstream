@@ -9,20 +9,20 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Estatísticas Rápidas -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                 <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:scale-105 hover:border-ellas-purple transition-all">
                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                         <i class="fas fa-graduation-cap text-6xl text-ellas-purple"></i>
                     </div>
-                    <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Cursos Atribuídos</div>
-                    <div class="text-4xl font-bold text-white mt-2">{{ count($cursos) }}</div>
+                    <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Cursos</div>
+                    <div class="text-4xl font-bold text-white mt-2">{{ $totalCursos }}</div>
                 </div>
 
                 <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:scale-105 hover:border-ellas-cyan transition-all">
                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                         <i class="fas fa-book-open text-6xl text-ellas-cyan"></i>
                     </div>
-                    <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Aulas Criadas</div>
+                    <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Aulas</div>
                     <div class="text-4xl font-bold text-white mt-2">{{ collect($cursos)->sum(fn($c) => count($c->aulas)) }}</div>
                 </div>
 
@@ -30,45 +30,64 @@
                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                         <i class="fas fa-users text-6xl text-ellas-pink"></i>
                     </div>
-                    <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Alunas Totais</div>
+                    <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Alunas</div>
                     <div class="text-4xl font-bold text-white mt-2">{{ collect($cursos)->sum(fn($c) => count($c->inscritos)) }}</div>
+                </div>
+
+                <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:scale-105 hover:border-ellas-cyan transition-all">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-comments text-6xl text-ellas-cyan"></i>
+                    </div>
+                    <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Dúvidas</div>
+                    <div class="text-4xl font-bold text-white mt-2">{{ \App\Models\MensagemChat::where('mentora_id', Auth::guard('mentora')->id())->where('lida', false)->count() }}</div>
                 </div>
             </div>
 
-            <!-- Meus Cursos -->
-            <div class="bg-ellas-card border border-ellas-nav rounded-2xl shadow-2xl overflow-hidden">
-                <div class="p-6 border-b border-ellas-nav">
-                    <h3 class="font-orbitron text-lg text-white font-bold flex items-center">
-                        <i class="fas fa-graduation-cap text-ellas-purple mr-3"></i>
-                        CURSOS ATRIBUÍDOS
+            <!-- Ações Rápidas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-8 shadow-2xl">
+                    <h3 class="font-orbitron text-lg text-white font-bold mb-6 flex items-center">
+                        <i class="fas fa-tasks text-ellas-purple mr-3"></i>
+                        GERENCIAMENTO
                     </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a href="{{ route('mentora.cursos') }}" class="p-4 bg-ellas-dark/50 border border-ellas-nav rounded-xl hover:border-ellas-purple transition-all group">
+                            <div class="text-ellas-purple font-bold text-sm group-hover:scale-105 transition-all">Gerenciar Cursos</div>
+                            <p class="text-[10px] text-gray-500 mt-1">Aulas, Materiais e Meet</p>
+                        </a>
+                        <a href="{{ route('mentora.alunas') }}" class="p-4 bg-ellas-dark/50 border border-ellas-nav rounded-xl hover:border-ellas-cyan transition-all group">
+                            <div class="text-ellas-cyan font-bold text-sm group-hover:scale-105 transition-all">Minhas Alunas</div>
+                            <p class="text-[10px] text-gray-500 mt-1">Presença e Desempenho</p>
+                        </a>
+                    </div>
                 </div>
 
-                <div class="p-6">
-                    @if(count($cursos) > 0)
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            @foreach($cursos as $curso)
-                                <div class="bg-ellas-dark/50 border border-ellas-nav rounded-xl p-4 hover:border-ellas-purple transition-all">
-                                    <h4 class="font-orbitron text-white font-bold mb-2">{{ $curso->nome }}</h4>
-                                    
-                                    <div class="space-y-1 text-xs text-gray-400 mb-3">
-                                        <p><i class="fas fa-calendar text-ellas-cyan mr-1"></i>{{ $curso->data_inicio->format('d/m/Y') }} - {{ $curso->data_fim->format('d/m/Y') }}</p>
-                                        <p><i class="fas fa-book text-ellas-pink mr-1"></i>{{ count($curso->aulas) }} aulas</p>
-                                        <p><i class="fas fa-users text-ellas-purple mr-1"></i>{{ count($curso->inscritos) }} alunas</p>
-                                    </div>
-
-                                    <a href="{{ route('mentora.cursos') }}" class="inline-flex items-center px-3 py-1 bg-ellas-purple/20 text-ellas-purple hover:bg-ellas-purple hover:text-white rounded-lg text-xs font-bold transition-all">
-                                        <i class="fas fa-edit mr-1"></i>GERENCIAR
-                                    </a>
+                <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-8 shadow-2xl">
+                    <h3 class="font-orbitron text-lg text-white font-bold mb-6 flex items-center">
+                        <i class="fas fa-envelope text-ellas-pink mr-3"></i>
+                        COMUNICAÇÃO
+                    </h3>
+                    <div class="space-y-4">
+                        @php
+                            $ultimasMensagens = \App\Models\MensagemChat::where('mentora_id', Auth::guard('mentora')->id())
+                                ->with('user')
+                                ->latest()
+                                ->take(3)
+                                ->get();
+                        @endphp
+                        @forelse($ultimasMensagens as $msg)
+                            <a href="{{ route('mentora.chat.duvidas', ['alunaId' => $msg->user_id]) }}" class="flex items-center p-3 bg-ellas-dark/30 rounded-lg border border-ellas-nav hover:bg-ellas-pink/10 transition-all">
+                                <img src="{{ $msg->user->profile_photo_url }}" class="w-8 h-8 rounded-full mr-3 object-cover">
+                                <div class="flex-1">
+                                    <div class="text-xs font-bold text-white">{{ $msg->user->name }}</div>
+                                    <p class="text-[10px] text-gray-400 truncate">{{ $msg->mensagem }}</p>
                                 </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="text-center py-12">
-                            <i class="fas fa-graduation-cap text-5xl text-gray-700 mb-4"></i>
-                            <p class="text-gray-500 font-biorhyme italic">Nenhum curso atribuído ainda.</p>
-                        </div>
-                    @endif
+                                <span class="text-[8px] text-gray-500">{{ $msg->created_at->diffForHumans() }}</span>
+                            </a>
+                        @empty
+                            <p class="text-center text-gray-500 italic text-xs py-4">Nenhuma mensagem recente.</p>
+                        @endforelse
+                    </div>
                 </div>
             </div>
         </div>

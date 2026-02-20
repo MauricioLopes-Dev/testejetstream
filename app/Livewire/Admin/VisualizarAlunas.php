@@ -75,6 +75,16 @@ class VisualizarAlunas extends Component
         $this->carregarAlunas();
     }
 
+    public function deslocarParaCurso($alunaId, $cursoId)
+    {
+        $aluna = User::find($alunaId);
+        // Remove de todos os cursos e adiciona no novo
+        $aluna->cursos()->detach();
+        $aluna->cursos()->attach($cursoId);
+        session()->flash('message', 'Aluna deslocada para o novo curso com sucesso!');
+        $this->carregarAlunas();
+    }
+
     public function render()
     {
         return view('livewire.admin.visualizar-alunas')->layout('layouts.admin');

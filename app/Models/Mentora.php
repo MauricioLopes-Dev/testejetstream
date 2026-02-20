@@ -34,4 +34,12 @@ class Mentora extends Authenticatable
     {
         return $this->hasMany(Curso::class);
     }
+
+    /**
+     * Relacionamento com as mensagens enviadas/recebidas pela mentora.
+     */
+    public function mensagens()
+    {
+        return $this->hasMany(MensagemChat::class);
+    }
 }

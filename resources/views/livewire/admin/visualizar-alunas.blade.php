@@ -105,7 +105,7 @@
                     <div>
                         <h4 class="font-orbitron text-sm text-ellas-purple uppercase mb-3">Cursos Inscritos ({{ $alunaDetalhes->cursos->count() }})</h4>
                         @if($alunaDetalhes->cursos->count() > 0)
-                            <div class="space-y-2">
+                            <div class="space-y-2 mb-4">
                                 @foreach($alunaDetalhes->cursos as $curso)
                                     <div class="bg-ellas-dark/50 border border-ellas-nav rounded-lg p-3">
                                         <p class="text-white font-bold">{{ $curso->nome }}</p>
@@ -114,8 +114,16 @@
                                 @endforeach
                             </div>
                         @else
-                            <p class="text-gray-500 text-sm italic">Não está inscrita em nenhum curso.</p>
+                            <p class="text-gray-500 text-sm italic mb-4">Não está inscrita em nenhum curso.</p>
                         @endif
+
+                        <h4 class="font-orbitron text-sm text-ellas-cyan uppercase mb-3">Deslocar para outro Curso</h4>
+                        <select wire:change="deslocarParaCurso({{ $alunaDetalhes->id }}, $event.target.value)" class="w-full bg-ellas-dark border-ellas-nav text-white rounded-lg py-2 px-4 focus:border-ellas-cyan focus:ring-0 text-sm">
+                            <option value="">Selecione um curso para deslocar...</option>
+                            @foreach(\App\Models\Curso::all() as $curso)
+                                <option value="{{ $curso->id }}">{{ $curso->nome }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <!-- Eventos Participando -->
