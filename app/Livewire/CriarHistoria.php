@@ -12,9 +12,8 @@ class CriarHistoria extends Component
 
     public function mount()
     {
-        // Trava de segurança: Alunas não podem postar
-        if (Auth::user()->role === 'aluna') {
-            abort(403);
+        if (!Auth::guard('admin')->check()) {
+            abort(403, 'Acesso não autorizado');
         }
     }
 
@@ -41,6 +40,6 @@ class CriarHistoria extends Component
 
     public function render()
     {
-        return view('livewire.criar-historia')->layout('layouts.app');
+        return view('livewire.criar-historia')->layout('layouts.admin');
     }
 }

@@ -12,7 +12,7 @@ class CriarEvento extends Component
 
     public function mount()
     {
-        if (!in_array(Auth::user()->role, ['admin', 'mentora'])) {
+        if (!Auth::guard('admin')->check()) {
             abort(403, 'Acesso não autorizado');
         }
     }

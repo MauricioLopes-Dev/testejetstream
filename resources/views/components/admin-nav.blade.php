@@ -17,33 +17,9 @@
                     <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         Dashboard
                     </x-nav-link>
-                    
-                    <x-nav-link href="{{ route('admin.historias.criar') }}" :active="request()->routeIs('admin.historias.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
-                        Histórias
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('admin.eventos.criar') }}" :active="request()->routeIs('admin.eventos.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
-                        Eventos
-                    </x-nav-link>
 
                     <x-nav-link href="{{ route('admin.cursos.index') }}" :active="request()->routeIs('admin.cursos.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         Cursos
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('admin.mentoras.pendentes') }}" :active="request()->routeIs('admin.mentoras.pendentes')" class="font-orbitron text-xs lg:text-sm text-ellas-pink font-bold hover:text-ellas-purple">
-                        Aprovar Mentoria
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('admin.alunas.index') }}" :active="request()->routeIs('admin.alunas.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
-                        Alunas
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('admin.mentoras.index') }}" :active="request()->routeIs('admin.mentoras.index')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
-                        Mentoras
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('admin.depoimentos.gerenciar') }}" :active="request()->routeIs('admin.depoimentos.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
-                        Depoimentos
                     </x-nav-link>
                 </div>
             </div>
@@ -105,26 +81,8 @@
             <x-responsive-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                 Dashboard
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.historias.criar') }}" :active="request()->routeIs('admin.historias.*')">
-                Histórias
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.eventos.criar') }}" :active="request()->routeIs('admin.eventos.*')">
-                Eventos
-            </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('admin.cursos.index') }}" :active="request()->routeIs('admin.cursos.*')">
                 Cursos
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.mentoras.pendentes') }}" :active="request()->routeIs('admin.mentoras.pendentes')">
-                Aprovar Mentoria
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.alunas.index') }}" :active="request()->routeIs('admin.alunas.*')">
-                Alunas
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.mentoras.index') }}" :active="request()->routeIs('admin.mentoras.index')">
-                Mentoras
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.depoimentos.gerenciar') }}" :active="request()->routeIs('admin.depoimentos.*')">
-                Depoimentos
             </x-responsive-nav-link>
         </div>
 

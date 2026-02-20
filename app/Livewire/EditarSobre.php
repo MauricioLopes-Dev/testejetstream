@@ -13,7 +13,7 @@ class EditarSobre extends Component
     public function mount()
     {
         // Apenas admin pode acessar
-        if (Auth::user()->role !== 'admin') {
+        if (!Auth::guard('admin')->check()) {
             abort(403, 'Acesso não autorizado.');
         }
 
@@ -72,6 +72,6 @@ class EditarSobre extends Component
 
     public function render()
     {
-        return view('livewire.editar-sobre')->layout('layouts.app');
+        return view('livewire.editar-sobre')->layout('layouts.admin');
     }
 }
