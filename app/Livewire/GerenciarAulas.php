@@ -3,26 +3,38 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use Livewire\WithFileUploads; // <--- Necessário para upload
+use Livewire\WithFileUploads;
 use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class GerenciarAulas extends Component
 {
-    use WithFileUploads; // <--- Habilita uploads
+    use WithFileUploads;
 
-    public $materialLinks = []; // Para inputs de texto
-    public $arquivos = [];      // Para inputs de arquivo (Uploads)
+    public $materialLinks = [];
+    public $arquivos = [];
+    
+    // Propriedade para saber quem está logado (admin ou mentora)
+    public $currentGuard;
 
     public function mount()
     {
-        if (Auth::user()->role !== 'mentora' && Auth::user()->role !== 'admin') {
+        // 1. Detecta qual guard está ativo e define o escopo
+        if (Auth::guard('admin')->check()) {
+            $this->currentGuard = 'admin';
+        } elseif (Auth::guard('mentora')->check()) {
+            $this->currentGuard = 'mentora';
+        } else {
+            // Se não for nem admin nem mentora, bloqueia
             abort(403, 'Acesso não autorizado.');
         }
 
-        // Carrega links existentes
-        $meusEventos = Event::where('user_id', Auth::id())->get();
+        // 2. Carrega links existentes usando o ID do guard correto
+        $userId = Auth::guard($this->currentGuard)->id();
+        
+        $meusEventos = Event::where('user_id', $userId)->get();
+        
         foreach($meusEventos as $evento) {
             $this->materialLinks[$evento->id] = $evento->material_link;
         }
@@ -30,17 +42,17 @@ class GerenciarAulas extends Component
 
     public function salvarMaterial($eventoId)
     {
+        $userId = Auth::guard($this->currentGuard)->id();
         $evento = Event::find($eventoId);
         
-        if ($evento && $evento->user_id == Auth::id()) {
+        // Verifica se o evento pertence ao usuário logado (Admin ou Mentora)
+        if ($evento && $evento->user_id == $userId) {
             
             $linkFinal = $this->materialLinks[$eventoId] ?? null;
 
-            // Lógica de Upload: Se tiver arquivo, ele ganha prioridade
+            // Lógica de Upload
             if (isset($this->arquivos[$eventoId])) {
-                // Salva na pasta 'materiais' dentro do disco público
                 $caminho = $this->arquivos[$eventoId]->store('materiais', 'public');
-                // Gera a URL para acesso
                 $linkFinal = Storage::url($caminho);
             }
 
@@ -48,20 +60,19 @@ class GerenciarAulas extends Component
                 'material_link' => $linkFinal
             ]);
             
-            // Limpa o input de arquivo após salvar para liberar memória
+            // Limpa o input de arquivo e array temporário
             unset($this->arquivos[$eventoId]);
             
             session()->flash('message', 'Material atualizado com sucesso para: ' . $evento->titulo);
         }
     }
 
-    // NOVA FUNÇÃO: Deletar Aula
     public function excluirAula($eventoId)
     {
+        $userId = Auth::guard($this->currentGuard)->id();
         $evento = Event::find($eventoId);
 
-        // Só permite excluir se for dono do evento
-        if ($evento && $evento->user_id == Auth::id()) {
+        if ($evento && $evento->user_id == $userId) {
             $evento->delete();
             session()->flash('message', 'Aula excluída com sucesso.');
         }
@@ -69,13 +80,18 @@ class GerenciarAulas extends Component
 
     public function render()
     {
-        $aulas = Event::with('participantes')
-                      ->where('user_id', Auth::id())
+        $userId = Auth::guard($this->currentGuard)->id();
+
+        $aulas = Event::with('participantes') // Certifique-se que a relação 'participantes' existe no Model
+                      ->where('user_id', $userId)
                       ->orderByDesc('data_hora')
                       ->get();
 
+        // 3. Define o layout dinamicamente
+        $layout = $this->currentGuard === 'admin' ? 'layouts.admin' : 'layouts.mentora';
+
         return view('livewire.gerenciar-aulas', [
             'aulas' => $aulas
-        ])->layout('layouts.app');
+        ])->layout($layout);
     }
 }

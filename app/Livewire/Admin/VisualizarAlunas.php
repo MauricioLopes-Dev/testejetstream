@@ -3,62 +3,45 @@
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 
 class VisualizarAlunas extends Component
 {
-    public $alunas;
+    use WithPagination;
+
     public $alunaDetalhes = null;
     public $showModal = false;
+    public $search = '';
 
     public function mount()
     {
-        if (Auth::guard('admin')->guest()) {
+        if (!Auth::guard('admin')->check()) {
             abort(403, 'Acesso não autorizado.');
         }
-
-        $this->carregarAlunas();
     }
 
-    public function carregarAlunas()
+    public function updatedSearch()
     {
-        $query = User::query();
-        
-        $relations = [];
-        if (Schema::hasTable('cursos')) {
-            $relations[] = 'cursos';
-        }
-        if (Schema::hasTable('events')) {
-            $relations[] = 'events';
-        }
-
-        if (!empty($relations)) {
-            $this->alunas = $query->withCount($relations)->latest()->get();
-        } else {
-            $this->alunas = $query->latest()->get();
-        }
+        $this->resetPage();
     }
 
     public function verDetalhes($alunaId)
     {
         $query = User::query();
         
+        // Carrega relacionamentos dinamicamente se existirem no Model
         $relations = [];
-        if (Schema::hasTable('cursos')) {
+        if (method_exists(User::class, 'cursos')) {
             $relations[] = 'cursos';
         }
-        if (Schema::hasTable('events')) {
+        if (method_exists(User::class, 'events')) {
             $relations[] = 'events';
         }
 
-        if (!empty($relations)) {
-            $this->alunaDetalhes = $query->with($relations)->find($alunaId);
-        } else {
-            $this->alunaDetalhes = $query->find($alunaId);
-        }
-        
+        $this->alunaDetalhes = $query->with($relations)->findOrFail($alunaId);
         $this->showModal = true;
     }
 
@@ -70,23 +53,44 @@ class VisualizarAlunas extends Component
 
     public function excluir($alunaId)
     {
-        User::find($alunaId)->delete();
+        $user = User::findOrFail($alunaId);
+        $user->delete();
         session()->flash('message', 'Aluna excluída com sucesso!');
-        $this->carregarAlunas();
-    }
-
-    public function deslocarParaCurso($alunaId, $cursoId)
-    {
-        $aluna = User::find($alunaId);
-        // Remove de todos os cursos e adiciona no novo
-        $aluna->cursos()->detach();
-        $aluna->cursos()->attach($cursoId);
-        session()->flash('message', 'Aluna deslocada para o novo curso com sucesso!');
-        $this->carregarAlunas();
     }
 
     public function render()
     {
-        return view('livewire.admin.visualizar-alunas')->layout('layouts.admin');
+        $query = User::query();
+
+        // CORREÇÃO: Removemos o filtro ->where('role', 'aluna')
+        // Como a tabela 'users' é dedicada às alunas, não precisamos filtrar.
+        
+        // Se você quisesse filtrar apenas quem NÃO é admin (caso compartilhassem a tabela):
+        // $query->where('is_admin', false); 
+        // Mas no seu caso de tabelas separadas, o código abaixo é suficiente:
+
+        if ($this->search) {
+            $query->where(function($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('email', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        // Verifica quais contagens carregar
+        $relationsCount = [];
+        if (method_exists(User::class, 'cursos')) {
+            $relationsCount[] = 'cursos';
+        }
+        if (method_exists(User::class, 'events')) {
+            $relationsCount[] = 'events';
+        }
+
+        if (!empty($relationsCount)) {
+            $query->withCount($relationsCount);
+        }
+
+        return view('livewire.admin.visualizar-alunas', [
+            'alunas' => $query->latest()->paginate(10)
+        ])->layout('layouts.admin');
     }
 }
