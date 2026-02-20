@@ -12,8 +12,9 @@ class ChatDuvidas extends Component
 {
     public $mentoraId;
     public $alunaId;
-    public $mensagem;
+    public $mensagem = '';
     public $tipoUsuario; // 'aluna' ou 'mentora'
+    public $interlocutor;
 
     public function mount($mentoraId = null, $alunaId = null)
     {
@@ -21,10 +22,20 @@ class ChatDuvidas extends Component
             $this->tipoUsuario = 'mentora';
             $this->mentoraId = Auth::guard('mentora')->id();
             $this->alunaId = $alunaId;
+            
+            if ($this->alunaId) {
+                $aluna = User::find($this->alunaId);
+                $this->interlocutor = $aluna ? $aluna->name : 'Aluna';
+            }
         } else {
             $this->tipoUsuario = 'aluna';
             $this->alunaId = Auth::id();
             $this->mentoraId = $mentoraId;
+            
+            if ($this->mentoraId) {
+                $mentora = Mentora::find($this->mentoraId);
+                $this->interlocutor = $mentora ? $mentora->nome : 'Mentora';
+            }
         }
     }
 
@@ -42,6 +53,7 @@ class ChatDuvidas extends Component
         ]);
 
         $this->mensagem = '';
+        $this->dispatch('mensagemEnviada');
     }
 
     public function render()
@@ -51,13 +63,11 @@ class ChatDuvidas extends Component
             ->orderBy('created_at', 'asc')
             ->get();
 
-        $interlocutor = $this->tipoUsuario === 'aluna' 
-            ? Mentora::find($this->mentoraId)->nome 
-            : User::find($this->alunaId)->name;
+        $layout = $this->tipoUsuario === 'mentora' ? 'layouts.mentora' : 'layouts.app';
 
         return view('livewire.chat-duvidas', [
             'mensagens' => $mensagens,
-            'interlocutor' => $interlocutor
-        ])->layout($this->tipoUsuario === 'mentora' ? 'layouts.mentora' : 'layouts.app');
+            'interlocutor' => $this->interlocutor
+        ])->layout($layout);
     }
 }

@@ -25,6 +25,7 @@ use App\Livewire\Aluna\PerfilAluna;
 use App\Livewire\Aluna\CursosAluna;
 use App\Livewire\Mentora\PerfilMentora;
 use App\Http\Controllers\MentoraDashboardController;
+use App\Livewire\ChatDuvidas;
 
 // Rota inicial do site
 Route::get('/', function () {
