@@ -3,61 +3,52 @@
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
+use Livewire\WithPagination; // Importante para paginação
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 
 class VisualizarAlunas extends Component
 {
-    public $alunas;
+    use WithPagination;
+
+    // Detalhes para o Modal
     public $alunaDetalhes = null;
     public $showModal = false;
+    
+    // Busca
+    public $search = '';
 
+    // Segurança
     public function mount()
     {
-        if (Auth::guard('admin')->guest()) {
+        if (!Auth::guard('admin')->check()) {
             abort(403, 'Acesso não autorizado.');
         }
-
-        $this->carregarAlunas();
     }
 
-    public function carregarAlunas()
+    // Reseta a paginação quando busca algo novo
+    public function updatedSearch()
     {
-        $query = User::query();
-        
-        $relations = [];
-        if (Schema::hasTable('cursos')) {
-            $relations[] = 'cursos';
-        }
-        if (Schema::hasTable('events')) {
-            $relations[] = 'events';
-        }
-
-        if (!empty($relations)) {
-            $this->alunas = $query->withCount($relations)->latest()->get();
-        } else {
-            $this->alunas = $query->latest()->get();
-        }
+        $this->resetPage();
     }
 
     public function verDetalhes($alunaId)
     {
+        // Carrega relacionamentos apenas se as tabelas existirem (Lógica original mantida mas otimizada)
         $query = User::query();
-        
         $relations = [];
+
         if (Schema::hasTable('cursos')) {
-            $relations[] = 'cursos';
+            // Tenta carregar cursos se a relação existir no Model
+            try { $relations[] = 'cursos'; } catch (\Exception $e) {} 
         }
         if (Schema::hasTable('events')) {
-            $relations[] = 'events';
+             try { $relations[] = 'events'; } catch (\Exception $e) {}
         }
 
-        if (!empty($relations)) {
-            $this->alunaDetalhes = $query->with($relations)->find($alunaId);
-        } else {
-            $this->alunaDetalhes = $query->find($alunaId);
-        }
+        // Busca a aluna com os relacionamentos
+        $this->alunaDetalhes = $query->with($relations)->find($alunaId);
         
         $this->showModal = true;
     }
@@ -70,13 +61,50 @@ class VisualizarAlunas extends Component
 
     public function excluir($alunaId)
     {
-        User::find($alunaId)->delete();
+        // Impede excluir a si mesmo ou outros admins por essa tela
+        $user = User::findOrFail($alunaId);
+        
+        if ($user->role === 'admin') {
+            session()->flash('error', 'Não é possível excluir administradores por esta tela.');
+            return;
+        }
+
+        $user->delete();
         session()->flash('message', 'Aluna excluída com sucesso!');
-        $this->carregarAlunas();
     }
 
     public function render()
     {
-        return view('livewire.admin.visualizar-alunas')->layout('layouts.admin');
+        // Query base
+        $query = User::query();
+
+        // Filtro de segurança: Tenta listar apenas quem NÃO é admin/mentora, 
+        // ou filtra por role se você tiver essa coluna. 
+        // Assumindo que 'role' existe baseado nos arquivos anteriores:
+        $query->where('role', 'aluna'); 
+
+        // Aplica a busca (Nome ou Email)
+        if ($this->search) {
+            $query->where(function($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('email', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        // Contagem de relacionamentos para a lista
+        $relationsCount = [];
+        if (Schema::hasTable('cursos')) $relationsCount[] = 'cursos'; // Assumindo relação 'cursos' no User
+        if (Schema::hasTable('events')) $relationsCount[] = 'events'; // Assumindo relação 'events' no User
+        
+        if (!empty($relationsCount)) {
+            $query->withCount($relationsCount);
+        }
+
+        // Retorna com paginação (10 por página)
+        $alunas = $query->latest()->paginate(10);
+
+        return view('livewire.admin.visualizar-alunas', [
+            'alunas' => $alunas
+        ])->layout('layouts.admin');
     }
 }

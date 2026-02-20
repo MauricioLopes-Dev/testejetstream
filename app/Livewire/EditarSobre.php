@@ -12,9 +12,10 @@ class EditarSobre extends Component
 
     public function mount()
     {
-        // Apenas admin pode acessar
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Acesso não autorizado.');
+        // CORREÇÃO 1: Verifica explicitamente o guard 'admin'
+        // Auth::user() padrão busca alunas e retornaria null aqui.
+        if (!Auth::guard('admin')->check()) {
+            abort(403, 'Acesso não autorizado. Apenas administradores.');
         }
 
         // Carrega os slides do banco ou usa padrão
@@ -23,7 +24,7 @@ class EditarSobre extends Component
         if ($slidesJson) {
             $this->slides = json_decode($slidesJson, true);
         } else {
-            // Slides padrão
+            // Slides padrão (caso não tenha nada salvo ainda)
             $this->slides = [
                 ['img' => 'sobre-1.jpg', 'title' => 'Nossa História', 'type' => 'Fundação 2025', 'desc' => 'O projeto Conectada com Ellas nasceu da paixão por promover a inclusão tecnológica.'],
                 ['img' => 'sobre-2.jpg', 'title' => 'Oficinas', 'type' => 'Interatividade', 'desc' => 'Oferecemos oficinas práticas que capacitam mulheres de todas as idades no mundo digital.'],
@@ -51,7 +52,7 @@ class EditarSobre extends Component
     public function removerSlide($index)
     {
         unset($this->slides[$index]);
-        $this->slides = array_values($this->slides); // Reindexar array
+        $this->slides = array_values($this->slides); // Reindexar array para evitar buracos nos índices
     }
 
     public function salvar()
@@ -64,7 +65,7 @@ class EditarSobre extends Component
             }
         }
 
-        // Salva no banco
+        // Salva no banco (usando o Model SiteSetting que criamos)
         SiteSetting::set('about_slides', json_encode($this->slides));
         
         session()->flash('message', 'Conteúdo "Sobre" atualizado com sucesso!');
@@ -72,6 +73,7 @@ class EditarSobre extends Component
 
     public function render()
     {
-        return view('livewire.editar-sobre')->layout('layouts.app');
+        // CORREÇÃO 2: Usa o layout do painel administrativo
+        return view('livewire.editar-sobre')->layout('layouts.admin');
     }
 }

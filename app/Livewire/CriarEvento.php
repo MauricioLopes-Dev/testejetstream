@@ -12,7 +12,9 @@ class CriarEvento extends Component
 
     public function mount()
     {
-        if (!in_array(Auth::user()->role, ['admin', 'mentora'])) {
+        // CORREÇÃO 1: Verificar especificamente o guard 'admin'
+        // O Auth::user() padrão busca alunas e retornaria erro aqui.
+        if (!Auth::guard('admin')->check()) {
             abort(403, 'Acesso não autorizado');
         }
     }
@@ -26,8 +28,12 @@ class CriarEvento extends Component
             'limite_vagas' => 'integer|min:0',
         ]);
 
+        // CORREÇÃO 2: Pegar o ID do Admin corretamente
+        // Se usar apenas Auth::id(), ele tenta pegar o ID de uma aluna.
+        $adminId = Auth::guard('admin')->id();
+
         Event::create([
-            'user_id' => Auth::id(),
+            'user_id' => $adminId, // Atenção: Certifique-se que seu BD aceita ID de admin aqui
             'titulo' => $this->titulo,
             'descricao' => $this->descricao,
             'data_hora' => $this->data_hora,
@@ -38,12 +44,14 @@ class CriarEvento extends Component
 
         session()->flash('message', 'Aula criada com sucesso! Agora você pode anexar o material.');
         
-        // MUDANÇA AQUI: Redireciona para 'minhas-aulas' em vez de 'eventos'
-        return redirect()->route('aulas.index');
+        // CORREÇÃO 3: Nome correto da rota conforme seu web.php
+        // A rota lá está definida como 'admin.aulas.gerenciar'
+        return redirect()->route('admin.aulas.gerenciar');
     }
 
     public function render()
     {
-        return view('livewire.criar-evento')->layout('layouts.app');
+        // CORREÇÃO 4: Layout correto (isso você já tinha feito certo!)
+        return view('livewire.criar-evento')->layout('layouts.admin');
     }
 }

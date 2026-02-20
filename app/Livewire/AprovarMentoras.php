@@ -15,7 +15,8 @@ class AprovarMentoras extends Component
     // Apenas Admins podem acessar (verificação extra além da rota)
     public function mount()
     {
-        if (Auth::user()->role !== 'admin') {
+        // CORREÇÃO: Verifica especificamente se o usuário está logado no guard 'admin'
+        if (!Auth::guard('admin')->check()) {
             abort(403);
         }
     }
@@ -56,6 +57,6 @@ class AprovarMentoras extends Component
 
         return view('livewire.aprovar-mentoras', [
             'candidatas' => $candidatas
-        ])->layout('layouts.app');
+        ])->layout('layouts.admin'); // CORREÇÃO: Aponta para o layout do painel administrativo
     }
 }

@@ -14,12 +14,28 @@
                 </div>
             @endif
 
+            @if(session('error'))
+                <div class="mb-6 p-4 bg-red-500/20 border border-red-500/50 text-red-400 rounded-lg font-biorhyme text-sm">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="bg-ellas-card border border-ellas-nav rounded-2xl shadow-2xl overflow-hidden">
-                <div class="p-6 border-b border-ellas-nav">
+                <div class="p-6 border-b border-ellas-nav flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <h3 class="font-orbitron text-lg text-white font-bold flex items-center">
                         <i class="fas fa-users text-ellas-cyan mr-3"></i>
-                        ALUNAS CADASTRADAS ({{ $alunas->count() }})
+                        ALUNAS CADASTRADAS ({{ $alunas->total() }})
                     </h3>
+
+                    <div class="w-full md:w-1/3 relative">
+                        <input 
+                            wire:model.live.debounce.300ms="search" 
+                            type="text" 
+                            placeholder="Buscar por nome ou email..." 
+                            class="w-full bg-ellas-dark border border-ellas-nav text-white rounded-lg pl-10 pr-4 py-2 focus:ring-ellas-purple focus:border-ellas-purple placeholder-gray-500 text-sm"
+                        >
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-500 text-xs"></i>
+                    </div>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -44,12 +60,12 @@
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         <span class="px-3 py-1 bg-ellas-purple/20 text-ellas-purple rounded-full text-xs font-bold">
-                                            {{ $aluna->cursos_count }}
+                                            {{ $aluna->cursos_count ?? 0 }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         <span class="px-3 py-1 bg-ellas-pink/20 text-ellas-pink rounded-full text-xs font-bold">
-                                            {{ $aluna->events_count }}
+                                            {{ $aluna->events_count ?? 0 }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4">
@@ -67,18 +83,23 @@
                                 <tr>
                                     <td colspan="5" class="text-center py-20">
                                         <i class="fas fa-user-slash text-5xl text-gray-700 mb-4"></i>
-                                        <p class="text-gray-500 font-biorhyme italic">Nenhuma aluna cadastrada.</p>
+                                        <p class="text-gray-500 font-biorhyme italic">Nenhuma aluna encontrada.</p>
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
+
+                @if($alunas->hasPages())
+                    <div class="p-4 border-t border-ellas-nav bg-ellas-dark/30">
+                        {{ $alunas->links() }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>
 
-    <!-- Modal de Detalhes -->
     @if($showModal && $alunaDetalhes)
         <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
             <div class="bg-ellas-card border border-ellas-nav rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -90,7 +111,6 @@
                 </div>
 
                 <div class="p-6 space-y-6">
-                    <!-- Informações Básicas -->
                     <div>
                         <h4 class="font-orbitron text-sm text-ellas-pink uppercase mb-3">Informações Básicas</h4>
                         <div class="space-y-2 text-sm">
@@ -101,7 +121,6 @@
                         </div>
                     </div>
 
-                    <!-- Cursos Inscritos -->
                     <div>
                         <h4 class="font-orbitron text-sm text-ellas-purple uppercase mb-3">Cursos Inscritos ({{ $alunaDetalhes->cursos->count() }})</h4>
                         @if($alunaDetalhes->cursos->count() > 0)
@@ -118,7 +137,6 @@
                         @endif
                     </div>
 
-                    <!-- Eventos Participando -->
                     <div>
                         <h4 class="font-orbitron text-sm text-ellas-pink uppercase mb-3">Eventos Participando ({{ $alunaDetalhes->events->count() }})</h4>
                         @if($alunaDetalhes->events->count() > 0)

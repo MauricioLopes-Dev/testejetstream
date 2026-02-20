@@ -15,11 +15,21 @@
             @endif
 
             <div class="bg-ellas-card border border-ellas-nav rounded-2xl shadow-2xl overflow-hidden">
-                <div class="p-6 border-b border-ellas-nav">
+                <div class="p-6 border-b border-ellas-nav flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <h3 class="font-orbitron text-lg text-white font-bold flex items-center">
                         <i class="fas fa-crown text-ellas-pink mr-3"></i>
-                        MENTORAS APROVADAS ({{ $mentoras->count() }})
+                        MENTORAS APROVADAS ({{ $mentoras->total() }})
                     </h3>
+
+                    <div class="w-full md:w-1/3 relative">
+                        <input 
+                            wire:model.live.debounce.300ms="search" 
+                            type="text" 
+                            placeholder="Buscar por nome ou email..." 
+                            class="w-full bg-ellas-dark border border-ellas-nav text-white rounded-lg pl-10 pr-4 py-2 focus:ring-ellas-purple focus:border-ellas-purple placeholder-gray-500 text-sm"
+                        >
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-500 text-xs"></i>
+                    </div>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -61,19 +71,24 @@
                             @empty
                                 <tr>
                                     <td colspan="4" class="text-center py-20">
-                                        <i class="fas fa-user-slash text-5xl text-gray-700 mb-4"></i>
-                                        <p class="text-gray-500 font-biorhyme italic">Nenhuma mentora aprovada.</p>
+                                        <i class="fas fa-search text-5xl text-gray-700 mb-4"></i>
+                                        <p class="text-gray-500 font-biorhyme italic">Nenhuma mentora encontrada.</p>
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
+
+                @if($mentoras->hasPages())
+                    <div class="p-4 border-t border-ellas-nav bg-ellas-dark/30">
+                        {{ $mentoras->links() }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>
 
-    <!-- Modal de Detalhes -->
     @if($showModal && $mentoraDetalhes)
         <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
             <div class="bg-ellas-card border border-ellas-nav rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -85,7 +100,6 @@
                 </div>
 
                 <div class="p-6 space-y-6">
-                    <!-- Informações Básicas -->
                     <div>
                         <h4 class="font-orbitron text-sm text-ellas-pink uppercase mb-3">Informações Básicas</h4>
                         <div class="space-y-2 text-sm">
@@ -98,7 +112,6 @@
                         </div>
                     </div>
 
-                    <!-- Sobre Mim -->
                     @if($mentoraDetalhes->sobre_mim)
                         <div>
                             <h4 class="font-orbitron text-sm text-ellas-purple uppercase mb-3">Sobre</h4>
@@ -106,7 +119,6 @@
                         </div>
                     @endif
 
-                    <!-- Links -->
                     <div>
                         <h4 class="font-orbitron text-sm text-ellas-cyan uppercase mb-3">Links</h4>
                         <div class="space-y-2 text-sm">
@@ -122,7 +134,6 @@
                         </div>
                     </div>
 
-                    <!-- Cursos Atribuídos -->
                     <div>
                         <h4 class="font-orbitron text-sm text-ellas-pink uppercase mb-3">Cursos Atribuídos ({{ $mentoraDetalhes->cursos->count() }})</h4>
                         @if($mentoraDetalhes->cursos->count() > 0)

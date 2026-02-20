@@ -17,8 +17,10 @@ class GerenciarDepoimentos extends Component
     // Garante que apenas Admins acessem este componente
     public function mount()
     {
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Acesso não autorizado.');
+        // CORREÇÃO 1: Verifica explicitamente o guard 'admin'
+        // Auth::user() buscaria no guard 'web' (alunas) e retornaria null aqui.
+        if (!Auth::guard('admin')->check()) {
+            abort(403, 'Acesso não autorizado. Apenas administradores.');
         }
     }
 
@@ -50,6 +52,11 @@ class GerenciarDepoimentos extends Component
     // Função para apagar um depoimento
     public function deletar($id)
     {
+        // Verificação de segurança adicional
+        if (!Auth::guard('admin')->check()) {
+            abort(403);
+        }
+
         $depoimento = Testimonial::find($id);
         
         if ($depoimento) {
@@ -65,6 +72,6 @@ class GerenciarDepoimentos extends Component
 
         return view('livewire.gerenciar-depoimentos', [
             'depoimentos' => $depoimentos
-        ])->layout('layouts.app');
+        ])->layout('layouts.admin'); // CORREÇÃO 2: Usa o layout do painel administrativo
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class GerenciarCursos extends Component
 {
-    public $cursos;
+    // Controle do Modal
     public $showModal = false;
     
     // Campos do formulário
@@ -23,11 +23,9 @@ class GerenciarCursos extends Component
     public $data_fim;
     public $mentora_id;
     public $ativo = true;
-
-    public $areas;
-    public $mentoras;
     public $mostrarAreaPersonalizada = false;
 
+    // Regras de validação
     protected $rules = [
         'nome' => 'required|min:3',
         'area_atuacao_id' => 'nullable|exists:areas_atuacao,id',
@@ -39,24 +37,18 @@ class GerenciarCursos extends Component
 
     public function mount()
     {
-        if (Auth::guard('admin')->guest()) {
+        // VERIFICAÇÃO DE SEGURANÇA: Garante que é admin
+        if (!Auth::guard('admin')->check()) {
             abort(403, 'Acesso não autorizado.');
         }
-
-        $this->carregarDados();
     }
 
-    public function carregarDados()
-    {
-        $this->cursos = Curso::with(['areaAtuacao', 'mentora'])->latest()->get();
-        $this->areas = AreaAtuacao::all();
-        $this->mentoras = Mentora::where('status_aprovacao', 'aprovado')->get();
-    }
-
+    // Monitora mudanças no select de Área de Atuação
     public function updatedAreaAtuacaoId($value)
     {
-        // Se selecionar "Outro" (vamos assumir que existe uma área com nome "Outro")
         $area = AreaAtuacao::find($value);
+        // Verifica se a área selecionada é "Outro" para mostrar campo extra
+        // Ajuste a string 'outro' conforme está no seu banco de dados
         $this->mostrarAreaPersonalizada = $area && strtolower($area->nome) === 'outro';
     }
 
@@ -65,17 +57,22 @@ class GerenciarCursos extends Component
         $this->resetForm();
         
         if ($cursoId) {
-            $curso = Curso::find($cursoId);
+            $curso = Curso::findOrFail($cursoId);
+            
             $this->curso_id = $curso->id;
             $this->nome = $curso->nome;
             $this->descricao = $curso->descricao;
             $this->area_atuacao_id = $curso->area_atuacao_id;
             $this->area_personalizada = $curso->area_personalizada;
-            $this->data_inicio = $curso->data_inicio->format('Y-m-d');
-            $this->data_fim = $curso->data_fim->format('Y-m-d');
+            
+            // Formata as datas para o input HTML (Y-m-d)
+            $this->data_inicio = $curso->data_inicio ? $curso->data_inicio->format('Y-m-d') : '';
+            $this->data_fim = $curso->data_fim ? $curso->data_fim->format('Y-m-d') : '';
+            
             $this->mentora_id = $curso->mentora_id;
             $this->ativo = $curso->ativo;
             
+            // Dispara a verificação da área personalizada
             $this->updatedAreaAtuacaoId($this->area_atuacao_id);
         }
         
@@ -90,16 +87,12 @@ class GerenciarCursos extends Component
 
     public function resetForm()
     {
-        $this->curso_id = null;
-        $this->nome = '';
-        $this->descricao = '';
-        $this->area_atuacao_id = null;
-        $this->area_personalizada = '';
-        $this->data_inicio = '';
-        $this->data_fim = '';
-        $this->mentora_id = null;
-        $this->ativo = true;
-        $this->mostrarAreaPersonalizada = false;
+        $this->reset([
+            'curso_id', 'nome', 'descricao', 'area_atuacao_id', 
+            'area_personalizada', 'data_inicio', 'data_fim', 
+            'mentora_id', 'ativo', 'mostrarAreaPersonalizada'
+        ]);
+        $this->ativo = true; // Valor padrão
     }
 
     public function salvar()
@@ -113,12 +106,13 @@ class GerenciarCursos extends Component
             'area_personalizada' => $this->mostrarAreaPersonalizada ? $this->area_personalizada : null,
             'data_inicio' => $this->data_inicio,
             'data_fim' => $this->data_fim,
-            'mentora_id' => $this->mentora_id,
+            'mentora_id' => $this->mentora_id ?: null, // Garante null se vazio
             'ativo' => $this->ativo,
         ];
 
         if ($this->curso_id) {
-            Curso::find($this->curso_id)->update($dados);
+            $curso = Curso::findOrFail($this->curso_id);
+            $curso->update($dados);
             session()->flash('message', 'Curso atualizado com sucesso!');
         } else {
             Curso::create($dados);
@@ -126,18 +120,22 @@ class GerenciarCursos extends Component
         }
 
         $this->fecharModal();
-        $this->carregarDados();
     }
 
     public function excluir($cursoId)
     {
-        Curso::find($cursoId)->delete();
+        $curso = Curso::findOrFail($cursoId);
+        $curso->delete();
         session()->flash('message', 'Curso excluído com sucesso!');
-        $this->carregarDados();
     }
 
     public function render()
     {
-        return view('livewire.admin.gerenciar-cursos')->layout('layouts.admin');
+        // Carrega os dados aqui para estarem sempre atualizados e não pesar a sessão
+        return view('livewire.admin.gerenciar-cursos', [
+            'cursos'   => Curso::with(['areaAtuacao', 'mentora'])->latest()->get(),
+            'areas'    => AreaAtuacao::orderBy('nome')->get(),
+            'mentoras' => Mentora::where('status_aprovacao', 'aprovado')->orderBy('nome')->get(),
+        ])->layout('layouts.admin');
     }
 }
