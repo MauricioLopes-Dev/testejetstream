@@ -58,17 +58,9 @@
                         CONTEÚDO
                     </h3>
                     <div class="space-y-4">
-                        <a href="{{ route('admin.historias.criar') }}" class="block p-4 bg-ellas-dark/50 border border-ellas-nav rounded-xl hover:border-ellas-cyan transition-all group">
-                            <div class="text-ellas-cyan font-bold text-sm group-hover:scale-105 transition-all">Criar Histórias</div>
-                            <p class="text-[10px] text-gray-400 mt-1">Publicar no blog da comunidade</p>
-                        </a>
-                        <a href="{{ route('admin.sobre.editar') }}" class="block p-4 bg-ellas-dark/50 border border-ellas-nav rounded-xl hover:border-ellas-pink transition-all group">
-                            <div class="text-ellas-pink font-bold text-sm group-hover:scale-105 transition-all">Editar "Sobre"</div>
-                            <p class="text-[10px] text-gray-400 mt-1">Alterar textos e imagens iniciais</p>
-                        </a>
-                        <a href="{{ route('admin.depoimentos.gerenciar') }}" class="block p-4 bg-ellas-dark/50 border border-ellas-nav rounded-xl hover:border-ellas-purple transition-all group">
-                            <div class="text-ellas-purple font-bold text-sm group-hover:scale-105 transition-all">Aprovar Depoimentos</div>
-                            <p class="text-[10px] text-gray-400 mt-1">Gerenciar feedbacks do site</p>
+                        <a href="/" class="block p-4 bg-ellas-dark/50 border border-ellas-nav rounded-xl hover:border-ellas-cyan transition-all group">
+                            <div class="text-ellas-cyan font-bold text-sm group-hover:scale-105 transition-all">Gerenciar Conteúdo</div>
+                            <p class="text-[10px] text-gray-400 mt-1">Editar Sobre, Histórias e Depoimentos</p>
                         </a>
                     </div>
                 </div>
