@@ -43,17 +43,28 @@ class User extends Authenticatable
         ];
     }
 
-    // Relationship with events (mentorships)
+    /**
+     * Relacionamento com eventos que o usuário criou.
+     */
     public function events()
     {
-        return $this->belongsToMany(Event::class);
+        return $this->hasMany(Event::class);
     }
 
-    // Relationship with courses
+    /**
+     * Relacionamento com eventos em que o usuário está participando.
+     */
+    public function eventosParticipando()
+    {
+        return $this->belongsToMany(Event::class, 'event_user')->withTimestamps();
+    }
+
+    /**
+     * Relacionamento com cursos em que o usuário está inscrito.
+     */
     public function cursos()
     {
         return $this->belongsToMany(Curso::class, 'curso_inscricoes')
-                    ->withTimestamps()
                     ->withPivot('inscrito_em');
     }
 }
