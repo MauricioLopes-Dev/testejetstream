@@ -177,19 +177,53 @@
             </div>
         </section>
 
-        <section id="sobre" class="py-20 bg-ellas-card/50">
-            <div class="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-12">
-                <div class="lg:w-1/2 relative">
-                    <div class="absolute inset-0 bg-ellas-gradient rounded-3xl blur opacity-30 transform rotate-3"></div>
-                    <img src="{{ asset('img/desenvolver.jpg') }}" alt="Nossa História" class="relative rounded-3xl shadow-2xl border border-white/10 w-full object-cover h-[400px]">
-                </div>
-                <div class="lg:w-1/2 space-y-6">
-                    <h5 class="font-orbitron text-ellas-pink tracking-widest uppercase text-sm">Sobre Nós</h5>
-                    <h2 class="font-orbitron text-4xl font-bold text-white">A Nossa História</h2>
-                    <p class="font-biorhyme text-gray-300 leading-relaxed text-justify">
-                        Idealizada por Rosana Mendes e fundada em 2025, o projeto <strong>'Conectada com Ellas'</strong> nasceu da paixão por promover a inclusão. Oferecemos oficinas interativas, eventos inspiradores e uma rede de apoio colaborativa. Acreditamos que, juntas, podemos superar barreiras e conectar mulheres de diferentes perfis para transformar o futuro da tecnologia.
-                    </p>
-                </div>
+        <!-- SEÇÃO SOBRE COM ABAS PARA ADMIN -->
+        <section id="sobre" class="py-20 bg-ellas-card/50 relative z-10">
+            <div class="max-w-7xl mx-auto px-6">
+                @php
+                    $isAdmin = Auth::guard('admin')->check();
+                @endphp
+
+                <!-- Abas de navegação (apenas para Admin) -->
+                @if($isAdmin)
+                    <div x-data="{ activeTab: 'visualizar' }" class="mb-8 flex gap-4 border-b border-ellas-nav pb-4">
+                        <button @click="activeTab = 'visualizar'" :class="activeTab === 'visualizar' ? 'border-b-2 border-ellas-pink text-ellas-pink' : 'text-gray-400 hover:text-white'" class="font-orbitron px-6 py-2 transition-colors">
+                            <i class="fas fa-eye mr-2"></i>Visualizar
+                        </button>
+                        <button @click="activeTab = 'editar'" :class="activeTab === 'editar' ? 'border-b-2 border-ellas-cyan text-ellas-cyan' : 'text-gray-400 hover:text-white'" class="font-orbitron px-6 py-2 transition-colors">
+                            <i class="fas fa-edit mr-2"></i>Editar Slides
+                        </button>
+                        <button @click="activeTab = 'historias'" :class="activeTab === 'historias' ? 'border-b-2 border-ellas-purple text-ellas-purple' : 'text-gray-400 hover:text-white'" class="font-orbitron px-6 py-2 transition-colors">
+                            <i class="fas fa-book mr-2"></i>Histórias
+                        </button>
+                        <button @click="activeTab = 'depoimentos'" :class="activeTab === 'depoimentos' ? 'border-b-2 border-ellas-pink text-ellas-pink' : 'text-gray-400 hover:text-white'" class="font-orbitron px-6 py-2 transition-colors">
+                            <i class="fas fa-star mr-2"></i>Depoimentos
+                        </button>
+                    </div>
+
+                    <!-- Aba Visualizar -->
+                    <div x-show="activeTab === 'visualizar'" class="space-y-8">
+                        @include('components.site.about-content')
+                    </div>
+
+                    <!-- Aba Editar Slides -->
+                    <div x-show="activeTab === 'editar'" class="space-y-8">
+                        @livewire('editar-sobre')
+                    </div>
+
+                    <!-- Aba Histórias -->
+                    <div x-show="activeTab === 'historias'" class="space-y-8">
+                        @livewire('criar-historia')
+                    </div>
+
+                    <!-- Aba Depoimentos -->
+                    <div x-show="activeTab === 'depoimentos'" class="space-y-8">
+                        @livewire('gerenciar-depoimentos')
+                    </div>
+                @else
+                    <!-- Visualização padrão para usuários não-admin -->
+                    @include('components.site.about-content')
+                @endif
             </div>
         </section>
 
@@ -225,50 +259,109 @@
             </div>
         </section>
 
+        <!-- SEÇÃO DEPOIMENTOS COM GERENCIAMENTO PARA ADMIN -->
         <section id="depoimentos" class="py-20 bg-ellas-card relative overflow-hidden">
             <div class="absolute top-0 right-0 w-96 h-96 bg-ellas-purple/10 rounded-full blur-3xl"></div>
             
             <div class="max-w-7xl mx-auto px-6 relative z-10">
+                @php
+                    $isAdmin = Auth::guard('admin')->check();
+                    $depoimentosAprovados = \App\Models\Testimonial::where('is_active', true)->latest()->get();
+                @endphp
+
                 <h5 class="font-orbitron text-center text-white/50 tracking-widest uppercase text-sm mb-2">Comunidade</h5>
                 <h2 class="font-orbitron text-center text-4xl font-bold text-white mb-12">Histórias que Inspiram</h2>
 
-                <div class="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide">
-                    <div class="min-w-[300px] md:min-w-[400px] bg-ellas-dark p-8 rounded-2xl border border-ellas-nav snap-center">
-                        <i class="fas fa-quote-left text-3xl text-ellas-purple mb-4"></i>
-                        <p class="font-biorhyme text-gray-300 italic mb-6">"Este site foi um divisor de águas. Graças às oportunidades indicadas aqui, consegui meu primeiro emprego na área!"</p>
-                        <div class="flex items-center gap-4 border-t border-ellas-nav pt-4">
-                            <img src="https://i.pravatar.cc/80?img=25" class="w-12 h-12 rounded-full border-2 border-ellas-purple" alt="Carla">
-                            <div>
-                                <p class="font-orbitron text-white font-bold">Carla M.</p>
-                                <p class="text-xs text-ellas-purple">Programadora Júnior</p>
+                @if($isAdmin)
+                    <!-- Abas para Admin -->
+                    <div x-data="{ depTab: 'visualizar' }" class="mb-8">
+                        <div class="flex gap-4 border-b border-ellas-nav pb-4 mb-8">
+                            <button @click="depTab = 'visualizar'" :class="depTab === 'visualizar' ? 'border-b-2 border-ellas-pink text-ellas-pink' : 'text-gray-400 hover:text-white'" class="font-orbitron px-6 py-2 transition-colors">
+                                <i class="fas fa-eye mr-2"></i>Visualizar
+                            </button>
+                            <button @click="depTab = 'gerenciar'" :class="depTab === 'gerenciar' ? 'border-b-2 border-ellas-cyan text-ellas-cyan' : 'text-gray-400 hover:text-white'" class="font-orbitron px-6 py-2 transition-colors">
+                                <i class="fas fa-cogs mr-2"></i>Gerenciar
+                            </button>
+                            <button @click="depTab = 'enviar'" :class="depTab === 'enviar' ? 'border-b-2 border-ellas-purple text-ellas-purple' : 'text-gray-400 hover:text-white'" class="font-orbitron px-6 py-2 transition-colors">
+                                <i class="fas fa-plus mr-2"></i>Enviar Depoimento
+                            </button>
+                        </div>
+
+                        <!-- Visualizar -->
+                        <div x-show="depTab === 'visualizar'">
+                            <div class="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide">
+                                @forelse($depoimentosAprovados as $depoimento)
+                                    <div class="min-w-[300px] md:min-w-[400px] bg-ellas-dark p-8 rounded-2xl border border-ellas-nav snap-center">
+                                        <i class="fas fa-quote-left text-3xl text-ellas-purple mb-4"></i>
+                                        <p class="font-biorhyme text-gray-300 italic mb-6">"{{ $depoimento->content }}"</p>
+                                        <div class="flex items-center gap-4 border-t border-ellas-nav pt-4">
+                                            @if($depoimento->photo_url)
+                                                <img src="{{ $depoimento->photo_url }}" class="w-12 h-12 rounded-full border-2 border-ellas-purple object-cover" alt="{{ $depoimento->name }}">
+                                            @else
+                                                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-ellas-purple to-ellas-pink flex items-center justify-center text-white font-bold">
+                                                    {{ substr($depoimento->name, 0, 1) }}
+                                                </div>
+                                            @endif
+                                            <div>
+                                                <p class="font-orbitron text-white font-bold">{{ $depoimento->name }}</p>
+                                                <p class="text-xs text-ellas-purple">{{ $depoimento->role }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="w-full text-center py-12 text-gray-500">
+                                        <p class="font-biorhyme">Nenhum depoimento aprovado ainda.</p>
+                                    </div>
+                                @endforelse
                             </div>
                         </div>
+
+                        <!-- Gerenciar -->
+                        <div x-show="depTab === 'gerenciar'">
+                            @livewire('gerenciar-depoimentos')
+                        </div>
+
+                        <!-- Enviar Depoimento -->
+                        <div x-show="depTab === 'enviar'">
+                            @livewire('submeter-depoimento')
+                        </div>
+                    </div>
+                @else
+                    <!-- Visualização para usuários normais -->
+                    <div class="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide">
+                        @forelse($depoimentosAprovados as $depoimento)
+                            <div class="min-w-[300px] md:min-w-[400px] bg-ellas-dark p-8 rounded-2xl border border-ellas-nav snap-center">
+                                <i class="fas fa-quote-left text-3xl text-ellas-purple mb-4"></i>
+                                <p class="font-biorhyme text-gray-300 italic mb-6">"{{ $depoimento->content }}"</p>
+                                <div class="flex items-center gap-4 border-t border-ellas-nav pt-4">
+                                    @if($depoimento->photo_url)
+                                        <img src="{{ $depoimento->photo_url }}" class="w-12 h-12 rounded-full border-2 border-ellas-purple object-cover" alt="{{ $depoimento->name }}">
+                                    @else
+                                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-ellas-purple to-ellas-pink flex items-center justify-center text-white font-bold">
+                                            {{ substr($depoimento->name, 0, 1) }}
+                                        </div>
+                                    @endif
+                                    <div>
+                                        <p class="font-orbitron text-white font-bold">{{ $depoimento->name }}</p>
+                                        <p class="text-xs text-ellas-purple">{{ $depoimento->role }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="w-full text-center py-12 text-gray-500">
+                                <p class="font-biorhyme">Nenhum depoimento disponível.</p>
+                            </div>
+                        @endforelse
                     </div>
 
-                    <div class="min-w-[300px] md:min-w-[400px] bg-ellas-dark p-8 rounded-2xl border border-ellas-nav snap-center">
-                        <i class="fas fa-quote-left text-3xl text-ellas-pink mb-4"></i>
-                        <p class="font-biorhyme text-gray-300 italic mb-6">"Aqui encontrei um espaço para trocar experiências e crescer junto. Isso realmente me deu mais confiança!"</p>
-                        <div class="flex items-center gap-4 border-t border-ellas-nav pt-4">
-                            <img src="https://i.pravatar.cc/80?img=32" class="w-12 h-12 rounded-full border-2 border-ellas-pink" alt="Fernanda">
-                            <div>
-                                <p class="font-orbitron text-white font-bold">Fernanda S.</p>
-                                <p class="text-xs text-ellas-pink">Engenheira de Software</p>
-                            </div>
+                    <!-- Botão para enviar depoimento (usuários normais) -->
+                    @auth
+                        <div class="mt-12 text-center">
+                            <p class="font-biorhyme text-gray-400 mb-6">Quer compartilhar sua história conosco?</p>
+                            @livewire('submeter-depoimento')
                         </div>
-                    </div>
-
-                    <div class="min-w-[300px] md:min-w-[400px] bg-ellas-dark p-8 rounded-2xl border border-ellas-nav snap-center">
-                        <i class="fas fa-quote-left text-3xl text-ellas-cyan mb-4"></i>
-                        <p class="font-biorhyme text-gray-300 italic mb-6">"As histórias de sucesso no site me inspiraram a não desistir. Hoje sou coordenadora de inovação."</p>
-                        <div class="flex items-center gap-4 border-t border-ellas-nav pt-4">
-                            <img src="https://i.pravatar.cc/80?img=9" class="w-12 h-12 rounded-full border-2 border-ellas-cyan" alt="Ana">
-                            <div>
-                                <p class="font-orbitron text-white font-bold">Ana P.</p>
-                                <p class="text-xs text-ellas-cyan">Cientista de Dados</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    @endauth
+                @endif
             </div>
         </section>
 
