@@ -14,6 +14,9 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-2 lg:space-x-4 sm:-my-px sm:ml-6 sm:flex">
+                    <x-nav-link href="{{ route('home') }}" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-gray-300 hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                        Início
+                    </x-nav-link>
                     <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         Dashboard
                     </x-nav-link>
@@ -78,6 +81,9 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1 bg-white dark:bg-ellas-card">
+            <x-nav-link href="{{ route('home') }}" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-gray-300 hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                Início
+            </x-nav-link>
             <x-responsive-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                 Dashboard
             </x-responsive-nav-link>

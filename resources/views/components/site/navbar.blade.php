@@ -8,26 +8,34 @@
             </div>
 
             <div class="hidden md:flex space-x-8 items-center">
-                <a href="{{ route('home') }}" class="font-orbitron text-sm {{ request()->routeIs('home') ? 'text-ellas-cyan' : 'hover:text-ellas-cyan' }} transition-colors">Início</a>
-                <a href="{{ route('site.about') }}" class="font-orbitron text-sm {{ request()->routeIs('site.about') ? 'text-ellas-cyan' : 'hover:text-ellas-cyan' }} transition-colors">Sobre</a>
-                <a href="{{ route('site.services') }}" class="font-orbitron text-sm {{ request()->routeIs('site.services') ? 'text-ellas-cyan' : 'hover:text-ellas-cyan' }} transition-colors">O que oferecemos</a>
-                <a href="{{ route('site.testimonials') }}" class="font-orbitron text-sm {{ request()->routeIs('site.testimonials') ? 'text-ellas-cyan' : 'hover:text-ellas-cyan' }} transition-colors">Depoimentos</a>
-                
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="font-orbitron px-6 py-2 rounded-full bg-ellas-purple hover:bg-ellas-pink text-white transition-all shadow-[0_0_15px_rgba(165,4,170,0.5)] hover:shadow-[0_0_20px_rgba(227,20,117,0.6)]">
-                            Dashboard
+            <a href="{{ route('home') }}" class="font-orbitron text-sm {{ request()->routeIs('home') ? 'text-ellas-cyan' : 'hover:text-ellas-cyan' }} transition-colors">Início</a>
+            <a href="{{ route('site.about') }}" class="font-orbitron text-sm {{ request()->routeIs('site.about') ? 'text-ellas-cyan' : 'hover:text-ellas-cyan' }} transition-colors">Sobre</a>
+            <a href="{{ route('site.services') }}" class="font-orbitron text-sm {{ request()->routeIs('site.services') ? 'text-ellas-cyan' : 'hover:text-ellas-cyan' }} transition-colors">O que oferecemos</a>
+            <a href="{{ route('site.testimonials') }}" class="font-orbitron text-sm {{ request()->routeIs('site.testimonials') ? 'text-ellas-cyan' : 'hover:text-ellas-cyan' }} transition-colors">Depoimentos</a>
+            
+            @if (Route::has('login'))
+                @if(Auth::guard('admin')->check())
+                    <a href="{{ route('admin.dashboard') }}" class="font-orbitron px-6 py-2 rounded-full bg-ellas-cyan hover:bg-blue-500 text-ellas-dark transition-all font-bold shadow-[0_0_15px_rgba(4,203,239,0.5)]">
+                        Painel Admin
+                    </a>
+                @elseif(Auth::guard('mentora')->check())
+                    <a href="{{ route('mentora.dashboard') }}" class="font-orbitron px-6 py-2 rounded-full bg-ellas-pink hover:bg-red-500 text-white transition-all shadow-[0_0_15px_rgba(227,20,117,0.5)]">
+                        Painel Mentora
+                    </a>
+                @elseif(Auth::guard('web')->check())
+                    <a href="{{ route('dashboard') }}" class="font-orbitron px-6 py-2 rounded-full bg-ellas-purple hover:bg-purple-700 text-white transition-all shadow-[0_0_15px_rgba(165,4,170,0.5)]">
+                        Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="font-orbitron text-sm hover:text-ellas-pink transition-colors mr-4">Log in</a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="font-orbitron px-6 py-2 rounded-full bg-gradient-to-r from-ellas-purple to-ellas-cyan text-white font-bold transition-all hover:scale-105 shadow-[0_0_15px_rgba(4,203,239,0.4)]">
+                            Cadastre-se
                         </a>
-                    @else
-                        <a href="{{ route('login') }}" class="font-orbitron text-sm hover:text-ellas-pink transition-colors mr-4">Log in</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="font-orbitron px-6 py-2 rounded-full bg-gradient-to-r from-ellas-purple to-ellas-cyan text-white font-bold transition-all hover:scale-105 shadow-[0_0_15px_rgba(4,203,239,0.4)]">
-                                Cadastre-se
-                            </a>
-                        @endif
-                    @endauth
+                    @endif
                 @endif
-            </div>
+            @endif
+        </div>
 
             <div class="-mr-2 flex items-center md:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-ellas-nav focus:outline-none">

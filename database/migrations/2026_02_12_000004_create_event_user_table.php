@@ -8,12 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('event_user', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('event_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // user_id is the aluna
-            $table->timestamps();
-        });
+        // Verifica se a tabela já não existe antes de criá-la
+        if (!Schema::hasTable('event_user')) {
+            Schema::create('event_user', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('event_id')->constrained()->onDelete('cascade');
+                $table->foreignId('user_id')->constrained()->onDelete('cascade'); // user_id is the aluna
+                $table->timestamps();
+            });
+        }
     }
 
     public function down(): void

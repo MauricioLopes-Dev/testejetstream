@@ -47,11 +47,7 @@
                                 {{ $slide['desc'] }}
                             </p>
                             
-                            <div class="pt-8">
-                                <a href="{{ route('site.services') }}" class="inline-flex items-center px-10 py-4 bg-ellas-pink text-white font-bold rounded-full hover:bg-pink-600 transition-all shadow-lg shadow-pink-500/40 transform hover:-translate-y-1">
-                                    Saiba Mais
-                                </a>
-                            </div>
+                            
                         </div>
                     </div>
 

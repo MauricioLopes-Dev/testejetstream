@@ -10,4 +10,5 @@
     @include('components.site.stats')
     @include('components.site.mission')
     @include('components.site.cta')
+    @include('components.site.services-list')
 @endsection
