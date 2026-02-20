@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'telefone',
     ];
 
     protected $hidden = [
@@ -46,5 +47,13 @@ class User extends Authenticatable
     public function events()
     {
         return $this->belongsToMany(Event::class);
+    }
+
+    // Relationship with courses
+    public function cursos()
+    {
+        return $this->belongsToMany(Curso::class, 'curso_inscricoes')
+                    ->withTimestamps()
+                    ->withPivot('inscrito_em');
     }
 }

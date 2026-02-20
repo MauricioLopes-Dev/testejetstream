@@ -29,4 +29,9 @@ class Mentora extends Authenticatable
     {
         return $this->belongsTo(AreaAtuacao::class, 'area_atuacao_id');
     }
+
+    public function cursos()
+    {
+        return $this->hasMany(Curso::class);
+    }
 }

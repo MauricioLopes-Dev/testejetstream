@@ -18,7 +18,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     
-                    <x-nav-link href="{{ route('completar-perfil') }}" :active="request()->routeIs('completar-perfil')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                    <x-nav-link href="{{ route('perfil.aluna') }}" :active="request()->routeIs('perfil.aluna')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         {{ __('Perfil') }}
                     </x-nav-link>
 

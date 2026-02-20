@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <x-slot name="header">
         <h2 class="font-orbitron font-bold text-xl text-white leading-tight">
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">Perfil</span> Administrativo
@@ -57,4 +57,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>

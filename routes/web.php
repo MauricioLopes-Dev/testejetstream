@@ -18,6 +18,13 @@ use App\Livewire\Blog;
 use App\Livewire\AgendaCalendario;
 use App\Livewire\MeusCursos;
 use App\Livewire\EditarSobre;
+use App\Livewire\Admin\GerenciarCursos;
+use App\Livewire\Admin\VisualizarAlunas;
+use App\Livewire\Admin\VisualizarMentoras;
+use App\Livewire\Aluna\PerfilAluna;
+use App\Livewire\Aluna\CursosAluna;
+use App\Livewire\Mentora\PerfilMentora;
+use App\Http\Controllers\MentoraDashboardController;
 
 // Rota inicial do site
 Route::get('/', function () {
@@ -73,7 +80,10 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/agenda', AgendaCalendario::class)->name('agenda.index');
     
     // Módulo de Cursos
-    Route::get('/meus-cursos', MeusCursos::class)->name('meus.cursos');
+    Route::get('/meus-cursos', CursosAluna::class)->name('meus.cursos');
+    
+    // Perfil da Aluna
+    Route::get('/perfil', PerfilAluna::class)->name('perfil.aluna');
 });
 
 // Painel Admin - Todas as funcionalidades solicitadas
@@ -92,6 +102,13 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/depoimentos', GerenciarDepoimentos::class)->name('depoimentos.gerenciar');
     Route::get('/sobre/editar', EditarSobre::class)->name('sobre.editar');
     
+    // Gerenciamento de Cursos
+    Route::get('/cursos', GerenciarCursos::class)->name('cursos.index');
+    
+    // Visualização de Alunas e Mentoras
+    Route::get('/alunas', VisualizarAlunas::class)->name('alunas.index');
+    Route::get('/mentoras', VisualizarMentoras::class)->name('mentoras.index');
+    
     // Perfil Admin
     Route::get('/perfil', [AdminDashboardController::class, 'perfil'])->name('perfil');
     Route::post('/perfil/senha', [AdminDashboardController::class, 'alterarSenha'])->name('perfil.senha');
@@ -99,8 +116,9 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 
 // Painel Mentora
 Route::middleware(['auth:mentora'])->prefix('mentora')->name('mentora.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('mentora.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [MentoraDashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/perfil', PerfilMentora::class)->name('perfil');
+    Route::get('/eventos', [MentoraDashboardController::class, 'eventos'])->name('eventos');
+    Route::get('/cursos', [MentoraDashboardController::class, 'cursos'])->name('cursos');
 });
 // Sync v2

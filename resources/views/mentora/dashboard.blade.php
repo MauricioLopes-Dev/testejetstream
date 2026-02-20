@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-mentora-layout>
     <x-slot name="header">
         <h2 class="font-orbitron font-bold text-xl text-white leading-tight">
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">Painel</span> da Mentora
@@ -7,43 +7,70 @@
 
     <div class="py-12 bg-ellas-dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-ellas-card border border-ellas-nav rounded-2xl shadow-2xl p-8 relative overflow-hidden">
-                <div class="absolute -top-24 -right-24 w-64 h-64 bg-ellas-purple/10 rounded-full blur-3xl"></div>
-                
-                <div class="relative z-10">
-                    <h3 class="font-orbitron text-3xl font-bold text-white mb-2">Olá, {{ Auth::guard('mentora')->user()->nome }}!</h3>
-                    <p class="font-biorhyme text-gray-400 mb-10">Bem-vinda ao seu ecossistema de mentoria. Transforme vidas através do conhecimento.</p>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="p-6 bg-ellas-dark/50 border border-ellas-nav rounded-xl hover:border-ellas-pink/50 transition-all group cursor-pointer">
-                            <div class="w-12 h-12 bg-ellas-pink/20 rounded-lg flex items-center justify-center text-ellas-pink mb-4 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-graduation-cap text-xl"></i>
-                            </div>
-                            <h4 class="font-orbitron text-white font-bold mb-2">Meus Cursos</h4>
-                            <p class="text-xs text-gray-400 font-biorhyme mb-4">Crie trilhas de aprendizado e compartilhe sua expertise.</p>
-                            <span class="text-ellas-pink text-xs font-bold flex items-center gap-2">GERENCIAR <i class="fas fa-arrow-right"></i></span>
-                        </div>
-
-                        <div class="p-6 bg-ellas-dark/50 border border-ellas-nav rounded-xl hover:border-ellas-cyan/50 transition-all group cursor-pointer">
-                            <div class="w-12 h-12 bg-ellas-cyan/20 rounded-lg flex items-center justify-center text-ellas-cyan mb-4 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-calendar-star text-xl"></i>
-                            </div>
-                            <h4 class="font-orbitron text-white font-bold mb-2">Eventos ao Vivo</h4>
-                            <p class="text-xs text-gray-400 font-biorhyme mb-4">Organize workshops e mentorias coletivas em tempo real.</p>
-                            <span class="text-ellas-cyan text-xs font-bold flex items-center gap-2">ORGANIZAR <i class="fas fa-arrow-right"></i></span>
-                        </div>
-
-                        <div class="p-6 bg-ellas-dark/50 border border-ellas-nav rounded-xl hover:border-ellas-purple/50 transition-all group cursor-pointer">
-                            <div class="w-12 h-12 bg-ellas-purple/20 rounded-lg flex items-center justify-center text-ellas-purple mb-4 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-clock text-xl"></i>
-                            </div>
-                            <h4 class="font-orbitron text-white font-bold mb-2">Minha Agenda</h4>
-                            <p class="text-xs text-gray-400 font-biorhyme mb-4">Visualize seus horários e conexões agendadas com as alunas.</p>
-                            <span class="text-ellas-purple text-xs font-bold flex items-center gap-2">VISUALIZAR <i class="fas fa-arrow-right"></i></span>
-                        </div>
+            
+            <!-- Estatísticas Rápidas -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:scale-105 hover:border-ellas-purple transition-all">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-graduation-cap text-6xl text-ellas-purple"></i>
                     </div>
+                    <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Cursos Atribuídos</div>
+                    <div class="text-4xl font-bold text-white mt-2">{{ count($cursos) }}</div>
+                </div>
+
+                <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:scale-105 hover:border-ellas-cyan transition-all">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-book-open text-6xl text-ellas-cyan"></i>
+                    </div>
+                    <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Aulas Criadas</div>
+                    <div class="text-4xl font-bold text-white mt-2">{{ collect($cursos)->sum(fn($c) => count($c->aulas)) }}</div>
+                </div>
+
+                <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:scale-105 hover:border-ellas-pink transition-all">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-users text-6xl text-ellas-pink"></i>
+                    </div>
+                    <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Alunas Totais</div>
+                    <div class="text-4xl font-bold text-white mt-2">{{ collect($cursos)->sum(fn($c) => count($c->inscritos)) }}</div>
+                </div>
+            </div>
+
+            <!-- Meus Cursos -->
+            <div class="bg-ellas-card border border-ellas-nav rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-6 border-b border-ellas-nav">
+                    <h3 class="font-orbitron text-lg text-white font-bold flex items-center">
+                        <i class="fas fa-graduation-cap text-ellas-purple mr-3"></i>
+                        CURSOS ATRIBUÍDOS
+                    </h3>
+                </div>
+
+                <div class="p-6">
+                    @if(count($cursos) > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach($cursos as $curso)
+                                <div class="bg-ellas-dark/50 border border-ellas-nav rounded-xl p-4 hover:border-ellas-purple transition-all">
+                                    <h4 class="font-orbitron text-white font-bold mb-2">{{ $curso->nome }}</h4>
+                                    
+                                    <div class="space-y-1 text-xs text-gray-400 mb-3">
+                                        <p><i class="fas fa-calendar text-ellas-cyan mr-1"></i>{{ $curso->data_inicio->format('d/m/Y') }} - {{ $curso->data_fim->format('d/m/Y') }}</p>
+                                        <p><i class="fas fa-book text-ellas-pink mr-1"></i>{{ count($curso->aulas) }} aulas</p>
+                                        <p><i class="fas fa-users text-ellas-purple mr-1"></i>{{ count($curso->inscritos) }} alunas</p>
+                                    </div>
+
+                                    <a href="{{ route('mentora.cursos') }}" class="inline-flex items-center px-3 py-1 bg-ellas-purple/20 text-ellas-purple hover:bg-ellas-purple hover:text-white rounded-lg text-xs font-bold transition-all">
+                                        <i class="fas fa-edit mr-1"></i>GERENCIAR
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-12">
+                            <i class="fas fa-graduation-cap text-5xl text-gray-700 mb-4"></i>
+                            <p class="text-gray-500 font-biorhyme italic">Nenhum curso atribuído ainda.</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-mentora-layout>
