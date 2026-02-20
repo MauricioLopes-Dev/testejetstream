@@ -18,10 +18,6 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('blog.index') }}" :active="request()->routeIs('blog.*')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
-                        {{ __('Histórias') }}
-                    </x-nav-link>
-
                     <x-nav-link href="{{ route('eventos.index') }}" :active="request()->routeIs('eventos.*')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         {{ __('Eventos') }}
                     </x-nav-link>

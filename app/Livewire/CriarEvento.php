@@ -44,6 +44,6 @@ class CriarEvento extends Component
 
     public function render()
     {
-        return view('livewire.criar-evento')->layout('layouts.app');
+        return view('livewire.admin.criar-evento')->layout('layouts.admin');
     }
 }

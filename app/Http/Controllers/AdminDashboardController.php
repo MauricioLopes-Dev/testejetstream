@@ -20,7 +20,7 @@ class AdminDashboardController extends Controller
         $totalAlunas = User::count();
         $totalMentoras = Mentora::where('status_aprovacao', 'aprovado')->count();
 
-        return view('admin.dashboard_content', compact('mentorasPendentes', 'totalAlunas', 'totalMentoras'));
+        return view('admin.dashboard', compact('mentorasPendentes', 'totalAlunas', 'totalMentoras'));
     }
 
     public function aprovar($id)

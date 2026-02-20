@@ -7,17 +7,22 @@
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 font-orbitron font-bold text-xl tracking-wider hover:scale-105 transition-transform">
                         <img src="{{ asset('img/3.png') }}" alt="Logo" class="h-10 w-auto" />
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink hidden lg:block">ADMIN</span>
+                        <h2 class="font-orbitron font-bold text-xl text-white leading-tight">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">Painel</span> Administrativo
+                        </h2>
                     </a>
-                </div>
+            </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-2 lg:space-x-4 sm:-my-px sm:ml-6 sm:flex">
+                    <x-nav-link href="{{ route('home') }}" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-gray-300 hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                        Início
+                    </x-nav-link>
                     <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         Dashboard
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('admin.eventos.criar') }}" :active="request()->routeIs('admin.eventos.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-gray-300 hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                    <x-nav-link href="{{ route('admin.eventos.criar') }}" :active="request()->routeIs('admin.eventos.criar')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-gray-300 hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         Eventos
                     </x-nav-link>
 
@@ -116,6 +121,9 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1 bg-white dark:bg-ellas-card">
+            <x-nav-link href="{{ route('home') }}" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-gray-300 hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                Início
+            </x-nav-link>
             <x-responsive-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                 Dashboard
             </x-responsive-nav-link>
