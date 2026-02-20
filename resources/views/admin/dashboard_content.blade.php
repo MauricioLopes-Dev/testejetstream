@@ -8,34 +8,31 @@
     <div class="py-12 bg-ellas-dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <!-- Estatísticas Rápidas - CLICÁVEIS -->
+            <!-- Estatísticas Rápidas -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                <a href="{{ route('admin.alunas.index') }}" class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:scale-105 hover:border-ellas-cyan transition-all cursor-pointer">
+                <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group">
                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                         <i class="fas fa-users text-6xl text-ellas-cyan"></i>
                     </div>
                     <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Alunas</div>
                     <div class="text-4xl font-bold text-white mt-2">{{ $totalAlunas ?? 0 }}</div>
-                    <div class="text-xs text-ellas-cyan mt-2">Clique para gerenciar</div>
-                </a>
+                </div>
 
-                <a href="{{ route('admin.mentoras.index') }}" class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:scale-105 hover:border-ellas-pink transition-all cursor-pointer">
+                <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group">
                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                         <i class="fas fa-crown text-6xl text-ellas-pink"></i>
                     </div>
                     <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Mentoras</div>
                     <div class="text-4xl font-bold text-white mt-2">{{ $totalMentoras ?? 0 }}</div>
-                    <div class="text-xs text-ellas-pink mt-2">Clique para gerenciar</div>
-                </a>
+                </div>
 
-                <a href="{{ route('admin.mentoras.pendentes') }}" class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:scale-105 hover:border-ellas-purple transition-all cursor-pointer">
+                <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group">
                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                         <i class="fas fa-clock text-6xl text-ellas-purple"></i>
                     </div>
                     <div class="text-sm font-orbitron text-gray-400 uppercase tracking-wider">Pendentes</div>
                     <div class="text-4xl font-bold text-white mt-2">{{ $mentorasPendentes->count() ?? 0 }}</div>
-                    <div class="text-xs text-ellas-purple mt-2">Clique para aprovar</div>
-                </a>
+                </div>
             </div>
 
             <!-- Seção de Mentoras Pendentes -->
@@ -44,7 +41,7 @@
                 <div class="p-6 border-b border-ellas-nav flex items-center justify-between">
                     <h3 class="font-orbitron text-lg text-white font-bold flex items-center">
                         <i class="fas fa-clipboard-check text-ellas-purple mr-3"></i>
-                        SOLICITAÇÕES DE MENTORIA
+                        SOLICITAÇÕES DE MENTORIA PARA APROVAÇÃO
                     </h3>
                     <span class="px-3 py-1 bg-ellas-purple/20 text-ellas-purple rounded-full text-xs font-bold">
                         {{ $mentorasPendentes->count() }} pendente(s)
@@ -95,49 +92,13 @@
                     </div>
                 </div>
             </div>
-            @endif
-
-            <!-- Acesso Rápido -->
-            <div class="bg-ellas-card border border-ellas-nav rounded-2xl shadow-2xl overflow-hidden">
-                <div class="p-6 border-b border-ellas-nav">
-                    <h3 class="font-orbitron text-lg text-white font-bold flex items-center">
-                        <i class="fas fa-bolt text-ellas-cyan mr-3"></i>
-                        ACESSO RÁPIDO
-                    </h3>
-                </div>
-                
-                <div class="p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <a href="{{ route('admin.eventos.criar') }}" class="bg-ellas-dark/50 border border-ellas-nav rounded-xl p-4 hover:bg-ellas-pink/10 hover:border-ellas-pink transition-all text-center">
-                        <i class="fas fa-calendar-plus text-2xl text-ellas-pink mb-2"></i>
-                        <p class="font-orbitron text-xs text-white">Criar Evento</p>
-                    </a>
-
-                    <a href="{{ route('admin.cursos.index') }}" class="bg-ellas-dark/50 border border-ellas-nav rounded-xl p-4 hover:bg-ellas-cyan/10 hover:border-ellas-cyan transition-all text-center">
-                        <i class="fas fa-graduation-cap text-2xl text-ellas-cyan mb-2"></i>
-                        <p class="font-orbitron text-xs text-white">Gerenciar Cursos</p>
-                    </a>
-
-                    <a href="{{ route('admin.historias.criar') }}" class="bg-ellas-dark/50 border border-ellas-nav rounded-xl p-4 hover:bg-ellas-purple/10 hover:border-ellas-purple transition-all text-center">
-                        <i class="fas fa-book-open text-2xl text-ellas-purple mb-2"></i>
-                        <p class="font-orbitron text-xs text-white">Criar História</p>
-                    </a>
-
-                    <a href="{{ route('admin.depoimentos.gerenciar') }}" class="bg-ellas-dark/50 border border-ellas-nav rounded-xl p-4 hover:bg-ellas-pink/10 hover:border-ellas-pink transition-all text-center">
-                        <i class="fas fa-quote-left text-2xl text-ellas-pink mb-2"></i>
-                        <p class="font-orbitron text-xs text-white">Depoimentos</p>
-                    </a>
-
-                    <a href="{{ route('admin.sobre.editar') }}" class="bg-ellas-dark/50 border border-ellas-nav rounded-xl p-4 hover:bg-ellas-cyan/10 hover:border-ellas-cyan transition-all text-center">
-                        <i class="fas fa-edit text-2xl text-ellas-cyan mb-2"></i>
-                        <p class="font-orbitron text-xs text-white">Editar Sobre</p>
-                    </a>
-
-                    <a href="{{ route('admin.perfil') }}" class="bg-ellas-dark/50 border border-ellas-nav rounded-xl p-4 hover:bg-ellas-purple/10 hover:border-ellas-purple transition-all text-center">
-                        <i class="fas fa-user-cog text-2xl text-ellas-purple mb-2"></i>
-                        <p class="font-orbitron text-xs text-white">Configurações</p>
-                    </a>
-                </div>
+            @else
+            <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-12 text-center shadow-2xl">
+                <i class="fas fa-check-circle text-6xl text-ellas-purple/20 mb-4"></i>
+                <h3 class="font-orbitron text-xl text-white font-bold">Tudo em dia!</h3>
+                <p class="text-gray-400 mt-2">Não há solicitações de mentoria pendentes no momento.</p>
             </div>
+            @endif
         </div>
     </div>
 </x-admin-layout>

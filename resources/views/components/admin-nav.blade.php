@@ -13,29 +13,37 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-4 lg:space-x-6 sm:-my-px sm:ml-6 sm:flex">
-                    <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                <div class="hidden space-x-2 lg:space-x-4 sm:-my-px sm:ml-6 sm:flex">
+                    <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         Dashboard
                     </x-nav-link>
                     
-                    <x-nav-link href="{{ route('admin.perfil') }}" :active="request()->routeIs('admin.perfil')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
-                        Perfil
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('admin.historias.criar') }}" :active="request()->routeIs('admin.historias.*')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                    <x-nav-link href="{{ route('admin.historias.criar') }}" :active="request()->routeIs('admin.historias.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         Histórias
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('admin.eventos.criar') }}" :active="request()->routeIs('admin.eventos.*')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                    <x-nav-link href="{{ route('admin.eventos.criar') }}" :active="request()->routeIs('admin.eventos.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         Eventos
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('admin.cursos.index') }}" :active="request()->routeIs('admin.cursos.*')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                    <x-nav-link href="{{ route('admin.cursos.index') }}" :active="request()->routeIs('admin.cursos.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         Cursos
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('admin.mentoras.pendentes') }}" :active="request()->routeIs('admin.mentoras.*')" class="font-orbitron text-ellas-pink font-bold hover:text-ellas-purple">
+                    <x-nav-link href="{{ route('admin.mentoras.pendentes') }}" :active="request()->routeIs('admin.mentoras.pendentes')" class="font-orbitron text-xs lg:text-sm text-ellas-pink font-bold hover:text-ellas-purple">
                         Aprovar Mentoria
+                    </x-nav-link>
+
+                    <x-nav-link href="{{ route('admin.alunas.index') }}" :active="request()->routeIs('admin.alunas.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                        Alunas
+                    </x-nav-link>
+
+                    <x-nav-link href="{{ route('admin.mentoras.index') }}" :active="request()->routeIs('admin.mentoras.index')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                        Mentoras
+                    </x-nav-link>
+
+                    <x-nav-link href="{{ route('admin.depoimentos.gerenciar') }}" :active="request()->routeIs('admin.depoimentos.*')" class="font-orbitron text-xs lg:text-sm text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                        Depoimentos
                     </x-nav-link>
                 </div>
             </div>
@@ -57,7 +65,11 @@
                     <x-slot name="content">
                         <div class="bg-white dark:bg-ellas-card border border-gray-100 dark:border-ellas-nav rounded-md">
                             <x-dropdown-link href="{{ route('admin.perfil') }}" class="text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-ellas-nav">
-                                Alterar Senha
+                                Perfil / Configurações
+                            </x-dropdown-link>
+
+                            <x-dropdown-link href="{{ route('admin.sobre.editar') }}" class="text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-ellas-nav">
+                                Editar Sobre
                             </x-dropdown-link>
 
                             <div class="border-t border-gray-100 dark:border-ellas-nav"></div>
@@ -93,9 +105,6 @@
             <x-responsive-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                 Dashboard
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.perfil') }}" :active="request()->routeIs('admin.perfil')">
-                Perfil
-            </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('admin.historias.criar') }}" :active="request()->routeIs('admin.historias.*')">
                 Histórias
             </x-responsive-nav-link>
@@ -105,8 +114,17 @@
             <x-responsive-nav-link href="{{ route('admin.cursos.index') }}" :active="request()->routeIs('admin.cursos.*')">
                 Cursos
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.mentoras.pendentes') }}" :active="request()->routeIs('admin.mentoras.*')">
+            <x-responsive-nav-link href="{{ route('admin.mentoras.pendentes') }}" :active="request()->routeIs('admin.mentoras.pendentes')">
                 Aprovar Mentoria
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('admin.alunas.index') }}" :active="request()->routeIs('admin.alunas.*')">
+                Alunas
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('admin.mentoras.index') }}" :active="request()->routeIs('admin.mentoras.index')">
+                Mentoras
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('admin.depoimentos.gerenciar') }}" :active="request()->routeIs('admin.depoimentos.*')">
+                Depoimentos
             </x-responsive-nav-link>
         </div>
 
@@ -121,7 +139,10 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link href="{{ route('admin.perfil') }}">
-                    Alterar Senha
+                    Perfil / Configurações
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('admin.sobre.editar') }}">
+                    Editar Sobre
                 </x-responsive-nav-link>
 
                 <form method="POST" action="{{ route('logout') }}">

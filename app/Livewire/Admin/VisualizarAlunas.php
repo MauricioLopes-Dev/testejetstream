@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class VisualizarAlunas extends Component
 {
@@ -23,12 +24,41 @@ class VisualizarAlunas extends Component
 
     public function carregarAlunas()
     {
-        $this->alunas = User::withCount(['cursos', 'events'])->latest()->get();
+        $query = User::query();
+        
+        $relations = [];
+        if (Schema::hasTable('cursos')) {
+            $relations[] = 'cursos';
+        }
+        if (Schema::hasTable('events')) {
+            $relations[] = 'events';
+        }
+
+        if (!empty($relations)) {
+            $this->alunas = $query->withCount($relations)->latest()->get();
+        } else {
+            $this->alunas = $query->latest()->get();
+        }
     }
 
     public function verDetalhes($alunaId)
     {
-        $this->alunaDetalhes = User::with(['cursos', 'events'])->find($alunaId);
+        $query = User::query();
+        
+        $relations = [];
+        if (Schema::hasTable('cursos')) {
+            $relations[] = 'cursos';
+        }
+        if (Schema::hasTable('events')) {
+            $relations[] = 'events';
+        }
+
+        if (!empty($relations)) {
+            $this->alunaDetalhes = $query->with($relations)->find($alunaId);
+        } else {
+            $this->alunaDetalhes = $query->find($alunaId);
+        }
+        
         $this->showModal = true;
     }
 
