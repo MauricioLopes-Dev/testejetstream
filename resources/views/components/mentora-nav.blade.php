@@ -29,6 +29,10 @@
                     <x-nav-link href="{{ route('mentora.cursos') }}" :active="request()->routeIs('mentora.cursos')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         Meus Cursos
                     </x-nav-link>
+
+                    <x-nav-link href="{{ route('mentora.alunas') }}" :active="request()->routeIs('mentora.alunas')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
+                        Minhas Alunas
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -93,6 +97,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('mentora.cursos') }}" :active="request()->routeIs('mentora.cursos')">
                 Meus Cursos
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('mentora.alunas') }}" :active="request()->routeIs('mentora.alunas')">
+                Minhas Alunas
             </x-responsive-nav-link>
         </div>
 

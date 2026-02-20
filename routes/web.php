@@ -25,6 +25,7 @@ use App\Livewire\Aluna\PerfilAluna;
 use App\Livewire\Aluna\CursosAluna;
 use App\Livewire\Mentora\PerfilMentora;
 use App\Http\Controllers\MentoraDashboardController;
+use App\Livewire\ChatDuvidas;
 
 // Rota inicial do site
 Route::get('/', function () {
@@ -84,6 +85,7 @@ Route::middleware(['auth:web'])->group(function () {
     
     // Perfil da Aluna
     Route::get('/perfil', PerfilAluna::class)->name('perfil.aluna');
+    Route::get('/chat/{mentoraId}', ChatDuvidas::class)->name('chat.duvidas');
 });
 
 // Painel Admin - Todas as funcionalidades solicitadas
@@ -119,6 +121,9 @@ Route::middleware(['auth:mentora'])->prefix('mentora')->name('mentora.')->group(
     Route::get('/dashboard', [MentoraDashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/perfil', PerfilMentora::class)->name('perfil');
     Route::get('/eventos', [MentoraDashboardController::class, 'eventos'])->name('eventos');
-    Route::get('/cursos', [MentoraDashboardController::class, 'cursos'])->name('cursos');
+    Route::get('/cursos', \App\Livewire\Mentora\MentoraCursos::class)->name('cursos');
+    Route::get('/alunas', \App\Livewire\Mentora\MentoraAlunas::class)->name('alunas');
+    Route::get('/presenca/{aulaId}', \App\Livewire\GerenciarPresenca::class)->name('presenca');
+    Route::get('/chat/{alunaId}', ChatDuvidas::class)->name('chat.duvidas');
 });
 // Sync v2

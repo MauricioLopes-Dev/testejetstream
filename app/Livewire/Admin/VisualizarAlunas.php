@@ -73,6 +73,16 @@ class VisualizarAlunas extends Component
         session()->flash('message', 'Aluna excluída com sucesso!');
     }
 
+    public function deslocarParaCurso($alunaId, $cursoId)
+    {
+        $aluna = User::find($alunaId);
+        // Remove de todos os cursos e adiciona no novo
+        $aluna->cursos()->detach();
+        $aluna->cursos()->attach($cursoId);
+        session()->flash('message', 'Aluna deslocada para o novo curso com sucesso!');
+        $this->carregarAlunas();
+    }
+
     public function render()
     {
         // Query base
