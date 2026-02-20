@@ -3,7 +3,7 @@
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
-use Livewire\WithPagination; // Importante para paginação
+use Livewire\WithPagination;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -12,14 +12,10 @@ class VisualizarAlunas extends Component
 {
     use WithPagination;
 
-    // Detalhes para o Modal
     public $alunaDetalhes = null;
     public $showModal = false;
-    
-    // Busca
     public $search = '';
 
-    // Segurança
     public function mount()
     {
         if (!Auth::guard('admin')->check()) {
@@ -27,7 +23,6 @@ class VisualizarAlunas extends Component
         }
     }
 
-    // Reseta a paginação quando busca algo novo
     public function updatedSearch()
     {
         $this->resetPage();
@@ -35,21 +30,18 @@ class VisualizarAlunas extends Component
 
     public function verDetalhes($alunaId)
     {
-        // Carrega relacionamentos apenas se as tabelas existirem (Lógica original mantida mas otimizada)
         $query = User::query();
-        $relations = [];
-
-        if (Schema::hasTable('cursos')) {
-            // Tenta carregar cursos se a relação existir no Model
-            try { $relations[] = 'cursos'; } catch (\Exception $e) {} 
-        }
-        if (Schema::hasTable('events')) {
-             try { $relations[] = 'events'; } catch (\Exception $e) {}
-        }
-
-        // Busca a aluna com os relacionamentos
-        $this->alunaDetalhes = $query->with($relations)->find($alunaId);
         
+        // Carrega relacionamentos dinamicamente se existirem no Model
+        $relations = [];
+        if (method_exists(User::class, 'cursos')) {
+            $relations[] = 'cursos';
+        }
+        if (method_exists(User::class, 'events')) {
+            $relations[] = 'events';
+        }
+
+        $this->alunaDetalhes = $query->with($relations)->findOrFail($alunaId);
         $this->showModal = true;
     }
 
@@ -61,39 +53,22 @@ class VisualizarAlunas extends Component
 
     public function excluir($alunaId)
     {
-        // Impede excluir a si mesmo ou outros admins por essa tela
         $user = User::findOrFail($alunaId);
-        
-        if ($user->role === 'admin') {
-            session()->flash('error', 'Não é possível excluir administradores por esta tela.');
-            return;
-        }
-
         $user->delete();
         session()->flash('message', 'Aluna excluída com sucesso!');
     }
 
-    public function deslocarParaCurso($alunaId, $cursoId)
-    {
-        $aluna = User::find($alunaId);
-        // Remove de todos os cursos e adiciona no novo
-        $aluna->cursos()->detach();
-        $aluna->cursos()->attach($cursoId);
-        session()->flash('message', 'Aluna deslocada para o novo curso com sucesso!');
-        $this->carregarAlunas();
-    }
-
     public function render()
     {
-        // Query base
         $query = User::query();
 
-        // Filtro de segurança: Tenta listar apenas quem NÃO é admin/mentora, 
-        // ou filtra por role se você tiver essa coluna. 
-        // Assumindo que 'role' existe baseado nos arquivos anteriores:
-        $query->where('role', 'aluna'); 
+        // CORREÇÃO: Removemos o filtro ->where('role', 'aluna')
+        // Como a tabela 'users' é dedicada às alunas, não precisamos filtrar.
+        
+        // Se você quisesse filtrar apenas quem NÃO é admin (caso compartilhassem a tabela):
+        // $query->where('is_admin', false); 
+        // Mas no seu caso de tabelas separadas, o código abaixo é suficiente:
 
-        // Aplica a busca (Nome ou Email)
         if ($this->search) {
             $query->where(function($q) {
                 $q->where('name', 'like', '%' . $this->search . '%')
@@ -101,20 +76,21 @@ class VisualizarAlunas extends Component
             });
         }
 
-        // Contagem de relacionamentos para a lista
+        // Verifica quais contagens carregar
         $relationsCount = [];
-        if (Schema::hasTable('cursos')) $relationsCount[] = 'cursos'; // Assumindo relação 'cursos' no User
-        if (Schema::hasTable('events')) $relationsCount[] = 'events'; // Assumindo relação 'events' no User
-        
+        if (method_exists(User::class, 'cursos')) {
+            $relationsCount[] = 'cursos';
+        }
+        if (method_exists(User::class, 'events')) {
+            $relationsCount[] = 'events';
+        }
+
         if (!empty($relationsCount)) {
             $query->withCount($relationsCount);
         }
 
-        // Retorna com paginação (10 por página)
-        $alunas = $query->latest()->paginate(10);
-
         return view('livewire.admin.visualizar-alunas', [
-            'alunas' => $alunas
+            'alunas' => $query->latest()->paginate(10)
         ])->layout('layouts.admin');
     }
 }

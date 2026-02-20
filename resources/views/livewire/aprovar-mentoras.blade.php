@@ -1,71 +1,144 @@
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Gestão de Usuários</h2>
+<div>
+    <x-slot name="header">
+        <h2 class="font-orbitron font-bold text-xl text-white leading-tight">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-ellas-purple to-ellas-pink">Aprovações</span> Pendentes
+        </h2>
+    </x-slot>
 
-        <!-- Mensagem de Sucesso -->
-        @if (session()->has('message'))
-            <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-300 px-4 py-3 rounded relative mb-4">
-                {{ session('message') }}
-            </div>
-        @endif
-
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg transition duration-300">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nome / Email</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Perfil Profissional</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Data Cadastro</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        @foreach($candidatas as $user)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="shrink-0 h-10 w-10">
-                                        <img class="h-10 w-10 rounded-full object-cover" src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}">
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $user->name }}</div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900 dark:text-white font-bold">{{ $user->area_atuacao ?? 'Não informado' }}</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs" title="{{ $user->bio }}">
-                                    {{ $user->bio ?? 'Sem biografia.' }}
-                                </div>
-                                @if($user->linkedin_url)
-                                    <a href="{{ $user->linkedin_url }}" target="_blank" class="text-blue-600 dark:text-blue-400 text-xs hover:underline mt-1 block">Ver LinkedIn</a>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                {{ $user->created_at->format('d/m/Y') }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button 
-                                    wire:click="aprovar({{ $user->id }})"
-                                    onclick="confirm('Tem certeza que deseja tornar essa usuária uma Mentora?') || event.stopImmediatePropagation()"
-                                    class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-white font-bold bg-indigo-50 dark:bg-indigo-900/50 px-3 py-2 rounded transition"
-                                >
-                                    Promover a Mentora
-                                </button>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+    <div class="py-12 bg-ellas-dark min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             
-            <!-- Paginação -->
-            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
-                {{ $candidatas->links() }} 
+            @if(session('message'))
+                <div class="p-4 bg-green-500/20 border border-green-500/50 text-green-400 rounded-lg font-biorhyme text-sm flex items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    {{ session('message') }}
+                </div>
+            @endif
+
+            <div class="bg-ellas-card border border-ellas-nav rounded-2xl shadow-xl overflow-hidden">
+                <div class="p-6 border-b border-ellas-nav bg-gradient-to-r from-ellas-purple/10 to-transparent">
+                    <h3 class="font-orbitron text-lg text-white font-bold flex items-center">
+                        <i class="fas fa-user-plus text-ellas-pink mr-3"></i>
+                        NOVOS CADASTROS DE MENTORAS ({{ $mentorasPendentes->count() }})
+                    </h3>
+                    <p class="text-xs text-gray-400 mt-1 ml-8">Mentoras que se cadastraram externamente e aguardam liberação.</p>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-ellas-dark/50 text-gray-400 font-orbitron text-xs uppercase">
+                            <tr>
+                                <th class="px-6 py-4">Mentora</th>
+                                <th class="px-6 py-4">Área de Atuação</th>
+                                <th class="px-6 py-4">Experiência</th>
+                                <th class="px-6 py-4 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-ellas-nav text-gray-300 text-sm">
+                            @forelse($mentorasPendentes as $mentora)
+                                <tr class="hover:bg-white/5 transition duration-200">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-white">{{ $mentora->nome }}</div>
+                                        <div class="text-xs text-ellas-cyan">{{ $mentora->email }}</div>
+                                        <div class="text-xs text-gray-500 mt-1">
+                                            <i class="fab fa-whatsapp mr-1"></i> {{ $mentora->telefone }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-1 bg-ellas-nav rounded text-xs text-gray-200">
+                                            {{ $mentora->areaAtuacao->nome ?? 'N/A' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-3 py-1 bg-ellas-purple/20 text-ellas-purple rounded-full text-xs font-bold uppercase border border-ellas-purple/30">
+                                            {{ $mentora->nivel_experiencia }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex justify-center gap-3">
+                                            <button 
+                                                wire:click="aprovarMentora({{ $mentora->id }})" 
+                                                onclick="return confirm('Deseja aprovar esta mentora? Ela receberá um e-mail de confirmação.')"
+                                                class="px-4 py-2 bg-green-500/20 text-green-400 hover:bg-green-500 hover:text-white rounded-lg transition font-bold text-xs flex items-center gap-2 border border-green-500/30">
+                                                <i class="fas fa-check"></i> APROVAR
+                                            </button>
+                                            
+                                            <button 
+                                                wire:click="reprovarMentora({{ $mentora->id }})" 
+                                                onclick="return confirm('Deseja reprovar este cadastro?')"
+                                                class="px-4 py-2 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition font-bold text-xs flex items-center gap-2 border border-red-500/30">
+                                                <i class="fas fa-times"></i> REPROVAR
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center py-12">
+                                        <div class="flex flex-col items-center justify-center text-gray-500">
+                                            <i class="fas fa-clipboard-check text-4xl mb-3 opacity-50"></i>
+                                            <p class="font-biorhyme italic">Nenhuma mentora aguardando aprovação no momento.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+            <div class="bg-ellas-card border border-ellas-nav rounded-2xl shadow-xl overflow-hidden opacity-90 hover:opacity-100 transition-opacity">
+                <div class="p-6 border-b border-ellas-nav bg-gradient-to-r from-ellas-cyan/10 to-transparent">
+                    <h3 class="font-orbitron text-lg text-white font-bold flex items-center">
+                        <i class="fas fa-hand-holding-heart text-ellas-cyan mr-3"></i>
+                        ALUNAS SOLICITANDO MENTORIA ({{ $alunasCandidatas->count() }})
+                    </h3>
+                    <p class="text-xs text-gray-400 mt-1 ml-8">Alunas já cadastradas que solicitaram tornar-se mentoras pelo perfil.</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-ellas-dark/50 text-gray-400 font-orbitron text-xs uppercase">
+                            <tr>
+                                <th class="px-6 py-4">Aluna</th>
+                                <th class="px-6 py-4">Email</th>
+                                <th class="px-6 py-4">Solicitado em</th>
+                                <th class="px-6 py-4 text-right">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-ellas-nav text-gray-300 text-sm">
+                            @forelse($alunasCandidatas as $aluna)
+                                <tr class="hover:bg-white/5 transition duration-200">
+                                    <td class="px-6 py-4 font-bold text-white flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-ellas-cyan/20 flex items-center justify-center text-ellas-cyan text-xs">
+                                            {{ substr($aluna->name, 0, 2) }}
+                                        </div>
+                                        {{ $aluna->name }}
+                                    </td>
+                                    <td class="px-6 py-4 text-gray-400">{{ $aluna->email }}</td>
+                                    <td class="px-6 py-4 text-gray-500 text-xs">
+                                        {{ $aluna->updated_at->format('d/m/Y H:i') }}
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button 
+                                            wire:click="aprovarAluna({{ $aluna->id }})" 
+                                            class="px-4 py-2 bg-ellas-cyan/20 text-ellas-cyan hover:bg-ellas-cyan hover:text-white rounded-lg transition font-bold text-xs border border-ellas-cyan/30">
+                                            <i class="fas fa-tasks mr-2"></i> PROCESSAR PEDIDO
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center py-8 text-gray-500 italic">
+                                        Nenhuma solicitação de upgrade de aluna.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
