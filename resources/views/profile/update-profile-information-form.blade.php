@@ -22,48 +22,56 @@
                                     reader.readAsDataURL($refs.photo.files[0]);
                             " />
 
-                <x-label for="photo" value="{{ __('Foto') }}" />
+                <x-label for="photo" value="{{ __('Foto de Perfil') }}" class="text-gray-300 font-orbitron" />
 
                 <div class="mt-2" x-show="! photoPreview">
-                    <img src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="rounded-full size-20 object-cover">
+                    <img src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="rounded-full size-24 object-cover border-4 border-ellas-purple shadow-lg">
                 </div>
 
                 <div class="mt-2" x-show="photoPreview" style="display: none;">
-                    <span class="block rounded-full size-20 bg-cover bg-no-repeat bg-center"
+                    <span class="block rounded-full size-24 bg-cover bg-no-repeat bg-center border-4 border-ellas-pink"
                           x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
                     </span>
                 </div>
 
-                <x-secondary-button class="mt-2 me-2" type="button" x-on:click.prevent="$refs.photo.click()">
-                    {{ __('Selecionar Nova Foto') }}
-                </x-secondary-button>
+                <div class="flex gap-2 mt-4">
+                    <button type="button" class="px-4 py-2 bg-ellas-purple text-white text-xs font-bold rounded-lg hover:bg-ellas-pink transition-all" x-on:click.prevent="$refs.photo.click()">
+                        SELECIONAR FOTO
+                    </button>
 
-                @if ($this->user->profile_photo_path)
-                    <x-secondary-button type="button" class="mt-2" wire:click="deleteProfilePhoto">
-                        {{ __('Remover Foto') }}
-                    </x-secondary-button>
-                @endif
+                    @if ($this->user->profile_photo_path)
+                        <button type="button" class="px-4 py-2 bg-red-600/20 text-red-400 text-xs font-bold rounded-lg border border-red-600/50" wire:click="deleteProfilePhoto">
+                            REMOVER
+                        </button>
+                    @endif
+                </div>
 
                 <x-input-error for="photo" class="mt-2" />
             </div>
         @endif
 
-        <div class="col-span-6 sm:col-span-4">
+        <div class="col-span-6 sm:col-span-4 mt-4">
             <x-label for="name" value="{{ __('Nome') }}" />
-            <x-input id="name" type="text" class="mt-1 block w-full" wire:model="state.name" required autocomplete="name" />
+            <x-input id="name" type="text" class="mt-1 block w-full bg-ellas-dark border-ellas-nav text-white focus:ring-ellas-purple" wire:model="state.name" required autocomplete="name" />
             <x-input-error for="name" class="mt-2" />
         </div>
 
-        <div class="col-span-6 sm:col-span-4">
+        <div class="col-span-6 sm:col-span-4 mt-4">
+            <x-label for="telefone" value="{{ __('Telefone') }}" />
+            <x-input id="telefone" type="text" class="mt-1 block w-full bg-ellas-dark border-ellas-nav text-white focus:ring-ellas-purple" wire:model="state.telefone" />
+            <x-input-error for="telefone" class="mt-2" />
+        </div>
+
+        <div class="col-span-6 sm:col-span-4 mt-4">
             <x-label for="email" value="{{ __('E-mail') }}" />
-            <x-input id="email" type="email" class="mt-1 block w-full" wire:model="state.email" required autocomplete="username" />
+            <x-input id="email" type="email" class="mt-1 block w-full bg-ellas-dark border-ellas-nav text-white focus:ring-ellas-purple" wire:model="state.email" required autocomplete="username" />
             <x-input-error for="email" class="mt-2" />
 
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()) && ! $this->user->hasVerifiedEmail())
-                <p class="text-sm mt-2">
+                <p class="text-sm mt-2 text-white">
                     {{ __('Seu endereço de e-mail não foi verificado.') }}
 
-                    <button type="button" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" wire:click.prevent="sendEmailVerification">
+                    <button type="button" class="underline text-sm text-gray-400 hover:text-white" wire:click.prevent="sendEmailVerification">
                         {{ __('Clique aqui para reenviar o e-mail de verificação.') }}
                     </button>
                 </p>

@@ -17,10 +17,6 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    
-                    <x-nav-link href="{{ route('perfil.aluna') }}" :active="request()->routeIs('perfil.aluna')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
-                        {{ __('Perfil') }}
-                    </x-nav-link>
 
                     <x-nav-link href="{{ route('blog.index') }}" :active="request()->routeIs('blog.*')" class="font-orbitron text-slate-600 dark:text-white hover:text-ellas-purple dark:hover:text-ellas-cyan">
                         {{ __('Histórias') }}

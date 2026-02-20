@@ -46,7 +46,7 @@
             <a href="{{ route('site.about') }}" class="block font-orbitron text-white hover:text-ellas-cyan">Sobre</a>
             <a href="{{ route('site.services') }}" class="block font-orbitron text-white hover:text-ellas-cyan">O que oferecemos</a>
             <a href="{{ route('site.testimonials') }}" class="block font-orbitron text-white hover:text-ellas-cyan">Depoimentos</a>
-            <a href="{{ route('login') }}" class="block font-orbitron text-white hover:text-ellas-pink">Login</a>
+            <a href="{{ route('login') }}" class="block font-orbitron text-white hover:text-ellas-pink">Login</a>q
             <a href="{{ route('register') }}" class="block font-orbitron text-ellas-cyan">Cadastre-se</a>
         </div>
     </div>
