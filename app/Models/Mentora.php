@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Mentora extends Authenticatable
 {
@@ -30,9 +31,29 @@ class Mentora extends Authenticatable
         return $this->belongsTo(AreaAtuacao::class, 'area_atuacao_id');
     }
 
+    /**
+     * Cursos onde é mentora principal (campo legado).
+     */
     public function cursos()
     {
         return $this->hasMany(Curso::class);
+    }
+
+    /**
+     * Cursos atribuídos via pivot.
+     */
+    public function cursosAtribuidos(): BelongsToMany
+    {
+        return $this->belongsToMany(Curso::class, 'curso_mentora')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Materiais didáticos criados pela mentora.
+     */
+    public function materiaisDidaticos()
+    {
+        return $this->hasMany(MaterialDidatico::class);
     }
 
     /**

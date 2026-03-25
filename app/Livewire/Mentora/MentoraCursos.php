@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Curso;
 use App\Models\Aula;
+use App\Models\Materia;
+use App\Models\MaterialDidatico;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -27,6 +29,21 @@ class MentoraCursos extends Component
     public $data_aula;
     public $ordem = 0;
 
+    // Modal de Material Didático
+    public $showMaterialModal = false;
+    public $material_id = null;
+    public $material_materia_id;
+    public $material_titulo;
+    public $material_descricao;
+    public $material_tipo = 'texto';
+    public $material_conteudo;
+    public $material_arquivo;
+    public $material_ordem = 0;
+
+    // Visualizar matérias
+    public $cursoMaterias = null;
+    public $showMateriasModal = false;
+
     protected $rules = [
         'titulo' => 'required|min:3',
         'tipo' => 'required|in:video,pdf,link_meet,texto',
@@ -47,7 +64,12 @@ class MentoraCursos extends Component
     public function carregarCursos()
     {
         $mentora = Auth::guard('mentora')->user();
-        $this->cursos = $mentora->cursos()->with(['aulas', 'inscritos'])->get();
+        
+        // Cursos onde é mentora principal OU está atribuída via pivot
+        $cursosPrincipal = $mentora->cursos()->with(['aulas', 'inscritos', 'materias.materiais'])->get();
+        $cursosAtribuidos = $mentora->cursosAtribuidos()->with(['aulas', 'inscritos', 'materias.materiais'])->get();
+        
+        $this->cursos = $cursosPrincipal->merge($cursosAtribuidos)->unique('id');
     }
 
     public function abrirModalAula($cursoId, $aulaId = null)
@@ -116,6 +138,102 @@ class MentoraCursos extends Component
     {
         Aula::find($aulaId)->delete();
         session()->flash('message', 'Aula excluída com sucesso!');
+        $this->carregarCursos();
+    }
+
+    // ===== MATÉRIAS E MATERIAIS =====
+
+    public function verMaterias($cursoId)
+    {
+        $this->cursoMaterias = Curso::with(['materias.materiais'])->find($cursoId);
+        $this->showMateriasModal = true;
+    }
+
+    public function fecharMaterias()
+    {
+        $this->showMateriasModal = false;
+        $this->cursoMaterias = null;
+    }
+
+    public function abrirMaterialModal($materiaId, $materialId = null)
+    {
+        $this->resetMaterialForm();
+        $this->material_materia_id = $materiaId;
+
+        if ($materialId) {
+            $material = MaterialDidatico::findOrFail($materialId);
+            $this->material_id = $material->id;
+            $this->material_titulo = $material->titulo;
+            $this->material_descricao = $material->descricao;
+            $this->material_tipo = $material->tipo;
+            $this->material_conteudo = $material->conteudo;
+            $this->material_ordem = $material->ordem;
+        }
+
+        $this->showMaterialModal = true;
+        $this->showMateriasModal = false;
+    }
+
+    public function resetMaterialForm()
+    {
+        $this->material_id = null;
+        $this->material_materia_id = null;
+        $this->material_titulo = '';
+        $this->material_descricao = '';
+        $this->material_tipo = 'texto';
+        $this->material_conteudo = '';
+        $this->material_arquivo = null;
+        $this->material_ordem = 0;
+    }
+
+    public function salvarMaterial()
+    {
+        $this->validate([
+            'material_titulo' => 'required|min:3',
+            'material_tipo' => 'required|in:video,pdf,documento,link,texto',
+            'material_conteudo' => 'nullable|string',
+            'material_arquivo' => 'nullable|file|max:51200',
+        ]);
+
+        $mentora = Auth::guard('mentora')->user();
+
+        $dados = [
+            'materia_id' => $this->material_materia_id,
+            'mentora_id' => $mentora->id,
+            'titulo' => $this->material_titulo,
+            'descricao' => $this->material_descricao,
+            'tipo' => $this->material_tipo,
+            'conteudo' => $this->material_conteudo,
+            'ordem' => $this->material_ordem,
+        ];
+
+        if ($this->material_arquivo) {
+            $path = $this->material_arquivo->store('materiais', 'public');
+            $dados['arquivo_path'] = $path;
+            $dados['arquivo_nome'] = $this->material_arquivo->getClientOriginalName();
+            $dados['conteudo'] = Storage::url($path);
+        }
+
+        if ($this->material_id) {
+            MaterialDidatico::findOrFail($this->material_id)->update($dados);
+            session()->flash('message', 'Material didático atualizado!');
+        } else {
+            MaterialDidatico::create($dados);
+            session()->flash('message', 'Material didático adicionado!');
+        }
+
+        $this->showMaterialModal = false;
+        $this->carregarCursos();
+    }
+
+    public function excluirMaterial($materialId)
+    {
+        $material = MaterialDidatico::findOrFail($materialId);
+        if ($material->arquivo_path && Storage::disk('public')->exists($material->arquivo_path)) {
+            Storage::disk('public')->delete($material->arquivo_path);
+        }
+        $material->delete();
+        session()->flash('message', 'Material excluído!');
         $this->carregarCursos();
     }
 

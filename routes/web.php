@@ -21,6 +21,7 @@ use App\Livewire\EditarSobre;
 use App\Livewire\Admin\GerenciarCursos;
 use App\Livewire\Admin\VisualizarAlunas;
 use App\Livewire\Admin\VisualizarMentoras;
+use App\Livewire\Admin\GerenciarMaterias;
 use App\Livewire\Aluna\PerfilAluna;
 use App\Livewire\Aluna\CursosAluna;
 use App\Livewire\Mentora\PerfilMentora;
@@ -57,6 +58,9 @@ Route::get('/mentora/verificacao', function() {
     return view('auth.mentora_verificacao');
 })->name('mentora.verificacao');
 Route::post('/mentora/verificar-codigo', [AutenticacaoController::class, 'verificarCodigo'])->name('mentora.verificar_codigo');
+
+// Tela de espera para mentoras aguardando aprovação
+Route::get('/mentora/aguardando-aprovacao', [AutenticacaoController::class, 'mostrarAguardando'])->name('mentora.aguardando');
 
 // Rotas Protegidas para Aluna (User padrão)
 Route::middleware(['auth:web'])->group(function () {
@@ -106,6 +110,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     
     // Gerenciamento de Cursos
     Route::get('/cursos', GerenciarCursos::class)->name('cursos.index');
+    Route::get('/cursos/{cursoId}/materias', GerenciarMaterias::class)->name('cursos.materias');
     
     // Visualização de Alunas e Mentoras
     Route::get('/alunas', VisualizarAlunas::class)->name('alunas.index');

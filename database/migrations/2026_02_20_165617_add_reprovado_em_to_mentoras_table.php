@@ -11,10 +11,13 @@ return new class extends Migration
      */
    public function up(): void
 {
-    Schema::table('mentoras', function (Blueprint $table) {
-        $table->timestamp('reprovado_em')->nullable();
-    });
+    if (!Schema::hasColumn('mentoras', 'reprovado_em')) {
+        Schema::table('mentoras', function (Blueprint $table) {
+            $table->timestamp('reprovado_em')->nullable();
+        });
+    }
 }
+
 
 public function down(): void
 {

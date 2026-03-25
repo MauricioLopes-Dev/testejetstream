@@ -9,7 +9,7 @@ class ProjetoEllasSeeder extends Seeder
 {
     public function run(): void
     {
-        \$areas = [
+        $areas = [
             'Banco de Dados',
             'Desenvolvimento Backend',
             'Desenvolvimento Frontend',
@@ -19,8 +19,8 @@ class ProjetoEllasSeeder extends Seeder
             'Outros'
         ];
 
-        foreach (\$areas as \$area) {
-            AreaAtuacao::firstOrCreate(['nome' => \$area]);
+        foreach ($areas as $area) {
+            AreaAtuacao::firstOrCreate(['nome' => $area]);
         }
     }
 }
