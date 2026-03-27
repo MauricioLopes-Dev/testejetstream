@@ -9,20 +9,23 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-public function up()
-{
-    Schema::table('mentoras', function (Blueprint $table) {
+    public function up(): void
+    {
         // Só adiciona a coluna se ela não existir
         if (!Schema::hasColumn('mentoras', 'reprovado_em')) {
-            $table->timestamp('reprovado_em')->nullable();
+            Schema::table('mentoras', function (Blueprint $table) {
+                $table->timestamp('reprovado_em')->nullable();
+            });
         }
-    });
-}
+    }
 
-public function down(): void
-{
-    Schema::table('mentoras', function (Blueprint $table) {
-        $table->dropColumn('reprovado_em');
-    });
-}
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('mentoras', function (Blueprint $table) {
+            $table->dropColumn('reprovado_em');
+        });
+    }
 };

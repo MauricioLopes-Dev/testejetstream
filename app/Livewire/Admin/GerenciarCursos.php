@@ -12,6 +12,7 @@ class GerenciarCursos extends Component
 {
     // Controle do Modal
     public $showModal = false;
+    public $showDetalhesModal = false;
     
     // Campos do formulário
     public $curso_id = null;
@@ -22,8 +23,14 @@ class GerenciarCursos extends Component
     public $data_inicio;
     public $data_fim;
     public $mentora_id;
+    public $mentoras_ids = [];
     public $ativo = true;
+    public $max_vagas = 30;
+    public $duracao_horas;
     public $mostrarAreaPersonalizada = false;
+
+    // Curso selecionado para detalhes
+    public $cursoDetalhes = null;
 
     // Regras de validação
     protected $rules = [
@@ -33,22 +40,20 @@ class GerenciarCursos extends Component
         'data_inicio' => 'required|date',
         'data_fim' => 'required|date|after:data_inicio',
         'mentora_id' => 'nullable|exists:mentoras,id',
+        'max_vagas' => 'required|integer|min:1|max:500',
+        'duracao_horas' => 'nullable|integer|min:1',
     ];
 
     public function mount()
     {
-        // VERIFICAÇÃO DE SEGURANÇA: Garante que é admin
         if (!Auth::guard('admin')->check()) {
             abort(403, 'Acesso não autorizado.');
         }
     }
 
-    // Monitora mudanças no select de Área de Atuação
     public function updatedAreaAtuacaoId($value)
     {
         $area = AreaAtuacao::find($value);
-        // Verifica se a área selecionada é "Outro" para mostrar campo extra
-        // Ajuste a string 'outro' conforme está no seu banco de dados
         $this->mostrarAreaPersonalizada = $area && strtolower($area->nome) === 'outro';
     }
 
@@ -57,22 +62,21 @@ class GerenciarCursos extends Component
         $this->resetForm();
         
         if ($cursoId) {
-            $curso = Curso::findOrFail($cursoId);
+            $curso = Curso::with('mentoras')->findOrFail($cursoId);
             
             $this->curso_id = $curso->id;
             $this->nome = $curso->nome;
             $this->descricao = $curso->descricao;
             $this->area_atuacao_id = $curso->area_atuacao_id;
             $this->area_personalizada = $curso->area_personalizada;
-            
-            // Formata as datas para o input HTML (Y-m-d)
             $this->data_inicio = $curso->data_inicio ? $curso->data_inicio->format('Y-m-d') : '';
             $this->data_fim = $curso->data_fim ? $curso->data_fim->format('Y-m-d') : '';
-            
             $this->mentora_id = $curso->mentora_id;
+            $this->mentoras_ids = $curso->mentoras->pluck('id')->toArray();
             $this->ativo = $curso->ativo;
+            $this->max_vagas = $curso->max_vagas;
+            $this->duracao_horas = $curso->duracao_horas;
             
-            // Dispara a verificação da área personalizada
             $this->updatedAreaAtuacaoId($this->area_atuacao_id);
         }
         
@@ -85,14 +89,28 @@ class GerenciarCursos extends Component
         $this->resetForm();
     }
 
+    public function verDetalhes($cursoId)
+    {
+        $this->cursoDetalhes = Curso::with(['areaAtuacao', 'mentora', 'mentoras', 'inscritos', 'materias.materiais', 'aulas'])->findOrFail($cursoId);
+        $this->showDetalhesModal = true;
+    }
+
+    public function fecharDetalhes()
+    {
+        $this->showDetalhesModal = false;
+        $this->cursoDetalhes = null;
+    }
+
     public function resetForm()
     {
         $this->reset([
             'curso_id', 'nome', 'descricao', 'area_atuacao_id', 
             'area_personalizada', 'data_inicio', 'data_fim', 
-            'mentora_id', 'ativo', 'mostrarAreaPersonalizada'
+            'mentora_id', 'mentoras_ids', 'ativo', 'max_vagas', 
+            'duracao_horas', 'mostrarAreaPersonalizada'
         ]);
-        $this->ativo = true; // Valor padrão
+        $this->ativo = true;
+        $this->max_vagas = 30;
     }
 
     public function salvar()
@@ -106,16 +124,24 @@ class GerenciarCursos extends Component
             'area_personalizada' => $this->mostrarAreaPersonalizada ? $this->area_personalizada : null,
             'data_inicio' => $this->data_inicio,
             'data_fim' => $this->data_fim,
-            'mentora_id' => $this->mentora_id ?: null, // Garante null se vazio
+            'mentora_id' => $this->mentora_id ?: null,
             'ativo' => $this->ativo,
+            'max_vagas' => $this->max_vagas,
+            'duracao_horas' => $this->duracao_horas ?: null,
         ];
 
         if ($this->curso_id) {
             $curso = Curso::findOrFail($this->curso_id);
             $curso->update($dados);
+            // Sincronizar mentoras atribuídas
+            $curso->mentoras()->sync($this->mentoras_ids);
             session()->flash('message', 'Curso atualizado com sucesso!');
         } else {
-            Curso::create($dados);
+            $curso = Curso::create($dados);
+            // Atribuir mentoras ao curso
+            if (!empty($this->mentoras_ids)) {
+                $curso->mentoras()->sync($this->mentoras_ids);
+            }
             session()->flash('message', 'Curso criado com sucesso!');
         }
 
@@ -125,15 +151,22 @@ class GerenciarCursos extends Component
     public function excluir($cursoId)
     {
         $curso = Curso::findOrFail($cursoId);
+        $curso->mentoras()->detach();
         $curso->delete();
         session()->flash('message', 'Curso excluído com sucesso!');
     }
 
+    public function toggleAtivo($cursoId)
+    {
+        $curso = Curso::findOrFail($cursoId);
+        $curso->update(['ativo' => !$curso->ativo]);
+        session()->flash('message', $curso->ativo ? 'Curso ativado!' : 'Curso desativado!');
+    }
+
     public function render()
     {
-        // Carrega os dados aqui para estarem sempre atualizados e não pesar a sessão
         return view('livewire.admin.gerenciar-cursos', [
-            'cursos'   => Curso::with(['areaAtuacao', 'mentora'])->latest()->get(),
+            'cursos'   => Curso::with(['areaAtuacao', 'mentora', 'mentoras', 'inscritos'])->latest()->get(),
             'areas'    => AreaAtuacao::orderBy('nome')->get(),
             'mentoras' => Mentora::where('status_aprovacao', 'aprovado')->orderBy('nome')->get(),
         ])->layout('layouts.admin');

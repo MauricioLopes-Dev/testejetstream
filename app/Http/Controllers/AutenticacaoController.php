@@ -128,12 +128,14 @@ class AutenticacaoController extends Controller
                 $mentora = Auth::guard('mentora')->user();
                 
                 if (!$mentora->email_verificado_at) {
+                    Auth::guard('mentora')->logout();
                     return redirect()->route('mentora.verificacao', ['email' => $mentora->email]);
                 }
 
                 if ($mentora->status_aprovacao === 'pendente') {
                     Auth::guard('mentora')->logout();
-                    return back()->withErrors(['email' => 'Seu cadastro de mentoria está sendo analisado.']);
+                    return redirect()->route('mentora.aguardando')
+                                     ->with('info', 'Seu cadastro está em análise pelo administrador.');
                 }
 
                 if ($mentora->status_aprovacao === 'reprovado') {
@@ -172,7 +174,17 @@ class AutenticacaoController extends Controller
             'email_verificado_at' => now(),
         ]);
 
-        return redirect('/')->with('success_box', 'Cadastro enviado com sucesso! Será analisado e você será informada pelo e-mail o resultado.');
+        // Redireciona para a tela de espera após verificar o email
+        return redirect()->route('mentora.aguardando')
+                         ->with('info', 'E-mail verificado com sucesso! Seu cadastro será analisado pelo administrador.');
+    }
+
+    /**
+     * Exibe a tela de espera para mentoras aguardando aprovação.
+     */
+    public function mostrarAguardando()
+    {
+        return view('auth.mentora_aguardando');
     }
 
     public function logout(Request $request)
