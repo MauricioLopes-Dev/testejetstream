@@ -44,7 +44,7 @@
                         <a href="#inicio" class="font-orbitron text-sm hover:text-ellas-cyan transition-colors">Início</a>
                         <a href="#sobre" class="font-orbitron text-sm hover:text-ellas-cyan transition-colors">Sobre</a>
                         <a href="#servicos" class="font-orbitron text-sm hover:text-ellas-cyan transition-colors">O que oferecemos</a>
-                        <a href="#depoimentos" class="font-orbitron text-sm hover:text-ellas-cyan transition-colors">Depoimentos</a>
+                        <a href="{{ route('site.eventos') }}" class="font-orbitron text-sm hover:text-ellas-cyan transition-colors">Eventos</a>
 
                     @if (Route::has('login'))
                         @if(Auth::guard('admin')->check())
@@ -85,6 +85,7 @@
                 <div class="pt-2 pb-3 space-y-1 p-4 flex flex-col gap-2">
                     <a href="#inicio" class="block font-orbitron text-white hover:text-ellas-cyan">Início</a>
                     <a href="#sobre" class="block font-orbitron text-white hover:text-ellas-cyan">Sobre</a>
+                    <a href="{{ route('site.eventos') }}" class="block font-orbitron text-white hover:text-ellas-cyan">Eventos</a>
                     <a href="{{ route('login') }}" class="block font-orbitron text-white hover:text-ellas-pink">Login</a>
                     <a href="{{ route('register') }}" class="block font-orbitron text-ellas-cyan">Cadastre-se</a>
                 </div>

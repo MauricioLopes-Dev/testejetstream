@@ -9,10 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up(): void
+public function up()
 {
     Schema::table('mentoras', function (Blueprint $table) {
-        $table->timestamp('reprovado_em')->nullable();
+        // Só adiciona a coluna se ela não existir
+        if (!Schema::hasColumn('mentoras', 'reprovado_em')) {
+            $table->timestamp('reprovado_em')->nullable();
+        }
     });
 }
 

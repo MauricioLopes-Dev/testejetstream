@@ -27,10 +27,20 @@ use App\Livewire\Mentora\PerfilMentora;
 use App\Http\Controllers\MentoraDashboardController;
 use App\Livewire\ChatDuvidas;
 
+// --- NOVOS IMPORTS DA GALERIA ---
+use App\Livewire\Site\GaleriaEventos;
+use App\Livewire\Admin\GerenciarGaleria;
+
 // Rota inicial do site
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+Route::view('/sobre', 'pages.about')->name('site.about');
+Route::view('/o-que-oferecemos', 'pages.services')->name('site.services');
+Route::view('/depoimentos', 'pages.testimonials')->name('site.testimonials');
+
+// --- NOVA ROTA PÚBLICA PARA VER A GALERIA DE EVENTOS ---
+Route::get('/eventos-realizados', GaleriaEventos::class)->name('site.eventos');
 
 // Rotas de Autenticação Aluna (Padrão)
 Route::get('/login', [AutenticacaoController::class, 'mostrarLogin'])->name('login');
@@ -103,6 +113,9 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/historias/criar', CriarHistoria::class)->name('historias.criar');
     Route::get('/depoimentos', GerenciarDepoimentos::class)->name('depoimentos.gerenciar');
     Route::get('/sobre/editar', EditarSobre::class)->name('sobre.editar');
+    
+    // --- NOVA ROTA ADMIN PARA POSTAR FOTOS ---
+    Route::get('/galeria', GerenciarGaleria::class)->name('galeria.gerenciar');
     
     // Gerenciamento de Cursos
     Route::get('/cursos', GerenciarCursos::class)->name('cursos.index');

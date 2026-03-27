@@ -2,7 +2,6 @@
     <div class="py-12 bg-ellas-dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <!-- Estatísticas Rápidas -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
                 <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-6 shadow-xl relative overflow-hidden group hover:scale-105 hover:border-ellas-cyan transition-all">
                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -29,9 +28,7 @@
                 </div>
             </div>
 
-            <!-- Ações Rápidas Admin -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                <!-- Gestão de Cursos -->
                 <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-8 shadow-2xl">
                     <h3 class="font-orbitron text-lg text-white font-bold mb-6 flex items-center">
                         <i class="fas fa-cogs text-ellas-purple mr-3"></i>
@@ -45,7 +42,6 @@
                     </div>
                 </div>
 
-                <!-- Gestão de Conteúdo -->
                 <div class="bg-ellas-card border border-ellas-nav rounded-2xl p-8 shadow-2xl">
                     <h3 class="font-orbitron text-lg text-white font-bold mb-6 flex items-center">
                         <i class="fas fa-newspaper text-ellas-cyan mr-3"></i>
@@ -56,13 +52,18 @@
                             <div class="text-ellas-cyan font-bold text-sm group-hover:scale-105 transition-all">Gerenciar Conteúdo</div>
                             <p class="text-[10px] text-gray-400 mt-1">Editar Sobre, Histórias e Depoimentos</p>
                         </a>
+
+                        <a href="{{ route('admin.galeria.gerenciar') }}" class="block p-4 bg-ellas-dark/50 border border-ellas-nav rounded-xl hover:border-ellas-pink transition-all group">
+                            <div class="text-ellas-pink font-bold text-sm group-hover:scale-105 transition-all flex items-center gap-2">
+                                <i class="fas fa-images"></i> Gerenciar Galeria de Eventos
+                            </div>
+                            <p class="text-[10px] text-gray-400 mt-1">Adicionar e remover fotos de eventos passados</p>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Gestão de Alunas e Mentoras -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Alunas -->
                 <div class="bg-ellas-card border border-ellas-nav rounded-2xl shadow-2xl overflow-hidden">
                     <div class="p-6 border-b border-ellas-nav bg-ellas-dark/50 flex items-center justify-between">
                         <div class="flex items-center">
@@ -101,7 +102,6 @@
                     </div>
                 </div>
 
-                <!-- Mentoras -->
                 <div class="bg-ellas-card border border-ellas-nav rounded-2xl shadow-2xl overflow-hidden">
                     <div class="p-6 border-b border-ellas-nav bg-ellas-dark/50 flex items-center justify-between">
                         <div class="flex items-center">
@@ -143,7 +143,6 @@
                 </div>
             </div>
 
-            <!-- Mentoras Pendentes de Aprovação -->
             @if($mentorasPendentes && $mentorasPendentes->count() > 0)
                 <div class="mt-10 bg-ellas-card border border-ellas-nav rounded-2xl shadow-2xl overflow-hidden">
                     <div class="p-6 border-b border-ellas-nav bg-gradient-to-r from-ellas-purple/20 to-ellas-pink/20 flex items-center justify-between">

@@ -1,7 +1,6 @@
-<x-guest-layout>
+<x-guest-layout bg-image="img/admin-login.png">
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-900">
         
-        <!-- Logo e Título -->
         <div class="mb-6 text-center">
             <a href="/" class="flex justify-center mb-4">
                 <img src="{{ asset('img/2.png') }}" class="h-20 w-auto bg-white rounded-full p-2" />

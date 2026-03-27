@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout :bg-image="($tipo ?? 'aluna') === 'admin' ? 'img/admin-login.png' : 'img/página de login.jpg'">
     <a href="/" class="absolute top-6 left-6 text-gray-400 hover:text-ellas-cyan transition-colors flex items-center gap-2 group z-50">
         <div class="w-8 h-8 rounded-full border border-ellas-nav flex items-center justify-center group-hover:border-ellas-cyan group-hover:bg-ellas-cyan/10 transition-all">
             <i class="fas fa-arrow-left text-xs group-hover:-translate-x-1 transition-transform"></i>
